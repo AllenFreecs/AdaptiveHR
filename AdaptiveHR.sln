@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveHR", "AdaptiveHR\AdaptiveHR.csproj", "{05341D36-FD40-4FE6-ACE2-6B4C2D25848B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05341D36-FD40-4FE6-ACE2-6B4C2D25848B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05341D36-FD40-4FE6-ACE2-6B4C2D25848B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05341D36-FD40-4FE6-ACE2-6B4C2D25848B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05341D36-FD40-4FE6-ACE2-6B4C2D25848B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1D8C5C3-1ADC-43CB-9EBF-490D48D83ED2}
+	EndGlobalSection
+EndGlobal
