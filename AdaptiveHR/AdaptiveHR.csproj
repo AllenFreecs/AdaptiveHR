@@ -20,4 +20,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="C:\Users\adolfoallen.benzon\.nuget\packages\nlog.config\4.6.2\contentFiles\any\any\NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
