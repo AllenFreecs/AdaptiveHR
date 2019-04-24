@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Model\" />
+    <Folder Include="Adaptive.BL\" />
+    <Folder Include="Helper\" />
+    <Folder Include="Util\Communication\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
