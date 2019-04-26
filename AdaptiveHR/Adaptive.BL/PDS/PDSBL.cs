@@ -26,9 +26,9 @@ namespace AdaptiveHR.Adaptive.BL.PDS
         {
             try
             {
-                var data = await _dbcontext.Pds.ToListAsync();
-                var pdsdata = Mapper.Map<IEnumerable<Pds>, IEnumerable<PDSDTO> >(data);
-
+                //var data = await _dbcontext.Pds.ToListAsync();
+                //var pdsdata = Mapper.Map<IEnumerable<Pds>, IEnumerable<PDSDTO> >(data);
+                var pdsdata = new List<PDSDTO>();
                 return pdsdata;
             }
             catch (Exception ex)

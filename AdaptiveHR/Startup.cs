@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adaptive.Models.Entities;
+using AdaptiveHR.Util.AutoMapper;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,9 +21,19 @@ namespace AdaptiveHR
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        //public Startup(IConfiguration configuration)
+        //{
+        //    Configuration = configuration;
+        //}
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(env.ContentRootPath)
+               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+               .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -31,6 +42,11 @@ namespace AdaptiveHR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            });
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -42,6 +58,10 @@ namespace AdaptiveHR
 
             services.AddHttpContextAccessor();
             services.AddAutoMapper();
+            Mapper.Initialize(x =>
+                x.AddProfile<AutoMapperProfile>()
+                );
+
             SwaggerConfig.ConfigureSwagger(services);
             Services.ConfigureServices(services, Configuration);
 

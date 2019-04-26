@@ -15,7 +15,7 @@ namespace AdaptiveHR.Util.AutoMapper
             pdsDTOMap();
         }
 
-        private void pdsDTOMap(){
+        private void pdsDTOMap() {
             CreateMap<Pds, PDSDTO>().IgnoreAllNonExisting();
         }
 
