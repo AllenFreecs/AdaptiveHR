@@ -22,12 +22,12 @@ namespace AdaptiveHR.Adaptive.BL.PDS
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PDSDTO>> GetPDSModels()
+        public async Task<IEnumerable<PDSDTO>> GetPDSList()
         {
             try
             {
                 var data = await _dbcontext.Pds.ToListAsync();
-                var pdsdata = data.Select(c => Mapper.Map<Pds, PDSDTO>(c)).ToList();
+                var pdsdata = Mapper.Map<IEnumerable<Pds>, IEnumerable<PDSDTO> >(data);
 
                 return pdsdata;
             }

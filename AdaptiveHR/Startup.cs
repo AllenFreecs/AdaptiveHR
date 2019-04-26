@@ -30,8 +30,7 @@ namespace AdaptiveHR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -47,7 +46,7 @@ namespace AdaptiveHR
             Services.ConfigureServices(services, Configuration);
 
             //Addd configuration validation to ensure all the mappings are done appropriately, any exeception will be thrown at runtime
-            //Mapper.AssertConfigurationIsValid();
+            Mapper.AssertConfigurationIsValid();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

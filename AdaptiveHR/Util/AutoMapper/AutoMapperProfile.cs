@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Adaptive.Models.Entities;
+using AdaptiveHR.Model;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,11 @@ namespace AdaptiveHR.Util.AutoMapper
     {
         public AutoMapperProfile()
         {
+            pdsDTOMap();
+        }
 
+        private void pdsDTOMap(){
+            CreateMap<Pds, PDSDTO>().IgnoreAllNonExisting();
         }
 
 
