@@ -58,7 +58,6 @@ namespace AdaptiveHR
                           options.UseSqlServer(Configuration.GetConnectionString("AdaptiveDB")));
 
             services.AddHttpContextAccessor();
-            services.AddAutoMapper();
             Mapper.Initialize(x =>
                 x.AddProfile<AutoMapperProfile>()
                 );
