@@ -8,9 +8,10 @@ namespace AdaptiveHR.Adaptive.BL.PDS
 {
     public interface IPDSBL
     {
-        Task<IEnumerable<PDSDTO>> GetPDSList();
+        Task<IEnumerable<PDSDTO>> GetPDSList(PageRequest paging);
+        Task<PDSDTO> GetPDSData(int ID);
         Task<GlobalResponseDTO> SavePDS(PDSDTO model);
-        Task<GlobalResponseDTO> DeletePDS();
+        Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs);
 
 
     }
