@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
 using NLog.Web;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace AdaptiveHR
 {
@@ -96,6 +97,7 @@ namespace AdaptiveHR
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
+                c.DocExpansion(DocExpansion.None);
             });
         }
     }
