@@ -10,7 +10,7 @@ namespace AdaptiveHR.Adaptive.BL.User
     {
         string Authenticate(string username, string password);
         IEnumerable<Users> GetAll();
-        string Checkheartbeat();
+        string ReIssuetoken(string claimID);
 
     }
 }

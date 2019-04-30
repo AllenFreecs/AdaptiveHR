@@ -8,5 +8,6 @@ namespace AdaptiveHR.Model
     public class AppSettings
     {
         public string Secret { get; set; }
+        public int Timeout { get; set; }
     }
 }

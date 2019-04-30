@@ -40,8 +40,15 @@ namespace AdaptiveHR.Controllers
         [Route("heartbeat")]
         public IActionResult HeartBeat()
         {
-            string claimid = User.FindFirstValue(ClaimTypes.Name);
-            return Ok(claimid);
+       
+            if (!String.IsNullOrEmpty(User.Identity.Name))
+            {
+                string claimid = User.FindFirstValue(ClaimTypes.Name);
+                return Ok(_userBL.ReIssuetoken(claimid));
+            }
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet]

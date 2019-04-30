@@ -20,6 +20,7 @@ namespace AdaptiveHR.Adaptive.BL.User
         {
             _dbcontext = adaptiveHRContext;
             appSettings.Secret = configuration["Secret"];
+            appSettings.Timeout = Convert.ToInt32(configuration["Timeout"]);
         }
 
         public string Authenticate(string username, string password)
@@ -27,42 +28,18 @@ namespace AdaptiveHR.Adaptive.BL.User
             try
             {
                 var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
-
                 // return null if user not found
                 if (user == null)
                     return null;
-
-                // authentication successful so generate jwt token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                    }),
-                    Expires = DateTime.UtcNow.AddDays(7),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                user.Token = tokenHandler.WriteToken(token);
-
-                // remove password before returning
-                user.Password = null;
-
-                return user.Token;
+                var Token = ReIssuetoken(user.Id.ToString());
+                return Token;
             }
             catch (Exception)
             {
 
                 throw;
-            } 
-             
-        }
+            }
 
-        public string Checkheartbeat()
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<Users> GetAll()
@@ -79,5 +56,35 @@ namespace AdaptiveHR.Adaptive.BL.User
                 throw;
             }
         }
+
+        public string ReIssuetoken(string claimID)
+        {
+            try
+            {
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                    new Claim(ClaimTypes.Name, claimID)
+                    }),
+                    Expires = DateTime.UtcNow.AddMinutes(appSettings.Timeout),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var newtoken =  tokenHandler.WriteToken(token);
+
+                return newtoken;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
     }
 }
