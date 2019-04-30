@@ -50,10 +50,22 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<TrainingDetail> TrainingDetail { get; set; }
         public virtual DbSet<TrainingResponse> TrainingResponse { get; set; }
         public virtual DbSet<Trainings> Trainings { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<WorkSchedule> WorkSchedule { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("data source=NGSHS36YC2\\SQL2008;initial catalog=AdaptiveHR;persist security info=True;user id=sa;password=Allen@123$%^");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+
             modelBuilder.Entity<AccrualType>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -266,6 +278,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.OtapproverGroup).HasColumnName("OTApproverGroup");
 
+                entity.Property(e => e.Salary).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.SessionId)
                     .HasColumnName("SessionID")
                     .IsUnicode(false);
@@ -319,6 +333,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Value).HasColumnType("decimal(18, 2)");
             });
 
             modelBuilder.Entity<HumanResourceStatus>(entity =>
@@ -380,6 +396,8 @@ namespace Adaptive.Models.Entities
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.Accrual).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
@@ -398,6 +416,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Hours).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.IdWorkType).HasColumnName("ID_WorkType");
 
@@ -484,6 +504,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
+                entity.Property(e => e.Hours).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -529,6 +551,8 @@ namespace Adaptive.Models.Entities
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
@@ -552,6 +576,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.Address).IsUnicode(false);
 
+                entity.Property(e => e.AskingSalary).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.BirthDay).HasColumnType("datetime");
 
                 entity.Property(e => e.CivilStatus)
@@ -561,6 +587,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CurrentAddress).IsUnicode(false);
+
+                entity.Property(e => e.CurrentSalary).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.EmailAddress)
                     .HasMaxLength(30)
@@ -737,6 +765,31 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Training).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<WorkSchedule>(entity =>
