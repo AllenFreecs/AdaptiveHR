@@ -24,6 +24,10 @@ namespace AdaptiveHR
                     TermsOfService = "None"
 
                 });
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -31,6 +35,7 @@ namespace AdaptiveHR
                     In = "header",
                     Type = "apiKey"
                 });
+                c.AddSecurityRequirement(security);
 
                 var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

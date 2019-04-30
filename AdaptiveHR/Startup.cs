@@ -107,7 +107,6 @@ namespace AdaptiveHR
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -118,12 +117,8 @@ namespace AdaptiveHR
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
             loggerFactory.AddNLog();
             env.ConfigureNLog("NLog.config");
-
-            //app.UseHttpsRedirection();
-            app.UseMvc();
 
             app.UseSwagger();
 
@@ -142,6 +137,7 @@ namespace AdaptiveHR
                 .AllowAnyHeader());
 
             app.UseAuthentication();
+            app.UseMvc();
 
         }
     }
