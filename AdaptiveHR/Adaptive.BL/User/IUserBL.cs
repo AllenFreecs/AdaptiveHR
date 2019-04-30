@@ -8,7 +8,9 @@ namespace AdaptiveHR.Adaptive.BL.User
 {
     public interface IUserBL
     {
-        Users Authenticate(string username, string password);
+        string Authenticate(string username, string password);
         IEnumerable<Users> GetAll();
+        string Checkheartbeat();
+
     }
 }

@@ -53,14 +53,6 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<WorkSchedule> WorkSchedule { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("data source=NGSHS36YC2\\SQL2008;initial catalog=AdaptiveHR;persist security info=True;user id=sa;password=Allen@123$%^");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

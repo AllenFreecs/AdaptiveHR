@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.User;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +34,14 @@ namespace AdaptiveHR.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("heartbeat")]
+        public IActionResult HeartBeat()
+        {
+            string claimid = User.FindFirstValue(ClaimTypes.Name);
+            return Ok(claimid);
         }
 
         [HttpGet]

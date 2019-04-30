@@ -22,7 +22,7 @@ namespace AdaptiveHR.Adaptive.BL.User
             appSettings.Secret = configuration["Secret"];
         }
 
-        public Users Authenticate(string username, string password)
+        public string Authenticate(string username, string password)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                 // remove password before returning
                 user.Password = null;
 
-                return user;
+                return user.Token;
             }
             catch (Exception)
             {
@@ -58,6 +58,11 @@ namespace AdaptiveHR.Adaptive.BL.User
                 throw;
             } 
              
+        }
+
+        public string Checkheartbeat()
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Users> GetAll()
