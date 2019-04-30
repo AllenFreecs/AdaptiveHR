@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdaptiveHR.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private IUserBL _userBL;

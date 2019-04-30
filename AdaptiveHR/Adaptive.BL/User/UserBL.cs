@@ -62,7 +62,17 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         public IEnumerable<Users> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var users = _dbcontext.Users.ToList();
+
+                return users;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
