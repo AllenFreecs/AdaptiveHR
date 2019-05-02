@@ -81,6 +81,8 @@ namespace AdaptiveHR
             // configure jwt authentication
             AppSettings appSettings = new AppSettings();
             appSettings.Secret = Configuration["Secret"];
+            appSettings.Issuer = Configuration["Issuer"];
+            appSettings.Audience = Configuration["Audience"];
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
             {
@@ -95,8 +97,12 @@ namespace AdaptiveHR
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuer = true,
+                    ValidIssuer = appSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = appSettings.Audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 

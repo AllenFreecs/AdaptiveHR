@@ -21,6 +21,8 @@ namespace AdaptiveHR.Adaptive.BL.User
             _dbcontext = adaptiveHRContext;
             appSettings.Secret = configuration["Secret"];
             appSettings.Timeout = Convert.ToInt32(configuration["Timeout"]);
+            appSettings.Issuer = configuration["Issuer"];
+            appSettings.Audience = configuration["Audience"];
         }
 
         public string Authenticate(string username, string password)
@@ -32,6 +34,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                 if (user == null)
                     return null;
                 var Token = ReIssuetoken(user.Id.ToString());
+
                 return Token;
             }
             catch (Exception)
@@ -70,6 +73,8 @@ namespace AdaptiveHR.Adaptive.BL.User
                     {
                     new Claim(ClaimTypes.Name, claimID)
                     }),
+                    Issuer = appSettings.Issuer,
+                    Audience = appSettings.Audience,
                     Expires = DateTime.UtcNow.AddMinutes(appSettings.Timeout),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -78,10 +83,10 @@ namespace AdaptiveHR.Adaptive.BL.User
 
                 return newtoken;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
 
