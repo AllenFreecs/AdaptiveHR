@@ -27,7 +27,7 @@ namespace AdaptiveHR.Adaptive.BL.User
             appSettings.Audience = configuration["Audience"];
         }
 
-        public string Authenticate(string username, string password)
+        public UserInfo Authenticate(string username, string password)
         {
             try
             {
@@ -53,9 +53,9 @@ namespace AdaptiveHR.Adaptive.BL.User
                     }
                 }
 
-               
 
-                return Token;
+
+                return new UserInfo() { token = Token , email = user.Email , name = string.Concat(user.FirstName," ", user.LastName)} ;
             }
             catch (Exception ex)
             {
@@ -86,6 +86,16 @@ namespace AdaptiveHR.Adaptive.BL.User
                 LogManager.GetCurrentClassLogger().Error(ex);
                 throw new Exception("Server processes error", ex);
             }
+        }
+
+        public GlobalResponseDTO ForgotPassword(string Username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GlobalResponseDTO ForgotUser(string email)
+        {
+            throw new NotImplementedException();
         }
 
         public string ReIssuetoken(string claimID , string RoleID)

@@ -28,6 +28,7 @@ namespace AdaptiveHR.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("authenticate")]
+        [ProducesResponseType(typeof(UserInfo), 200)]
         public IActionResult Authenticate(string UserName, string Password)
         {
             try

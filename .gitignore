@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/AdaptiveHR/Util/Communication/MailSender.cs
+/AdaptiveHR/Model/UserInfo.cs

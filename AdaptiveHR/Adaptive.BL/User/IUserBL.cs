@@ -1,4 +1,5 @@
 ﻿using Adaptive.Models.Entities;
+using AdaptiveHR.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,11 @@ namespace AdaptiveHR.Adaptive.BL.User
 {
     public interface IUserBL
     {
-        string Authenticate(string username, string password);
+        UserInfo Authenticate(string username, string password);
         string ReIssuetoken(string claimID, string roleID);
         bool ForgeryDetected(string token , int userID);
+        GlobalResponseDTO ForgotPassword(string Username);
+        GlobalResponseDTO ForgotUser(string email);
+
     }
 }
