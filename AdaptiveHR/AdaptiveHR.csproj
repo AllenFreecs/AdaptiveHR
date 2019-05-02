@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Enum\" />
     <Folder Include="Helper\" />
     <Folder Include="Util\Communication\" />
     <Folder Include="wwwroot\" />

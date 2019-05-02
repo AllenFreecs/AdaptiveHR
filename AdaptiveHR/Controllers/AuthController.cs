@@ -5,9 +5,11 @@ using System.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.User;
+using AdaptiveHR.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace AdaptiveHR.Controllers
 {
@@ -26,36 +28,60 @@ namespace AdaptiveHR.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("authenticate")]
-        public IActionResult Authenticate(string UserName , string Password)
+        public IActionResult Authenticate(string UserName, string Password)
         {
-            var user = _userBL.Authenticate(UserName, Password);
+            try
+            {
+                var user = _userBL.Authenticate(UserName, Password);
 
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                if (user == null)
+                    return BadRequest(new { message = "Username or password is incorrect" });
 
-            return Ok(user);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+           
         }
-
+        
         [HttpGet]
         [Route("heartbeat")]
         public IActionResult HeartBeat()
         {
-       
-            if (!String.IsNullOrEmpty(User.Identity.Name))
+            try
             {
-                string claimid = User.FindFirstValue(ClaimTypes.Name);
-                return Ok(_userBL.ReIssuetoken(claimid));
+                if (!String.IsNullOrEmpty(User.Identity.Name))
+                {
+                    var accesToken = Request.Headers["Authorization"];
+                    string claimid = User.FindFirstValue(ClaimTypes.Name);
+                    string roleid = User.FindFirstValue(ClaimTypes.Role);
+                    if (!_userBL.ForgeryDetected(accesToken, Convert.ToInt32(claimid)))
+                    {
+                        return Ok(_userBL.ReIssuetoken(claimid, roleid));
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "Forgery detected." });
+                    }
+
+
+                }
+                {
+                    return NotFound();
+                }
             }
+            catch (Exception ex)
             {
-                return NotFound();
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
             }
+
+
+          
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _userBL.GetAll();
-            return Ok(users);
-        }
     }
 }

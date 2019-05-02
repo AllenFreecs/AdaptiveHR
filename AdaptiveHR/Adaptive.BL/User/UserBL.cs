@@ -1,7 +1,9 @@
 ﻿using Adaptive.Models.Entities;
 using AdaptiveHR.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -33,34 +35,60 @@ namespace AdaptiveHR.Adaptive.BL.User
                 // return null if user not found
                 if (user == null)
                     return null;
-                var Token = ReIssuetoken(user.Id.ToString());
+                var Token = ReIssuetoken(user.Id.ToString(), user.IdUserGroup.ToString());
+                user.Token = Token;
+                using (var transaction = _dbcontext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _dbcontext.Entry(user).State = EntityState.Modified;
+                        _dbcontext.SaveChanges();
+                        transaction.Commit();
+
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+
+               
 
                 return Token;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
             }
 
         }
 
-        public IEnumerable<Users> GetAll()
+        public bool ForgeryDetected(string token, int userID)
         {
             try
             {
-                var users = _dbcontext.Users.ToList();
+                token = token.Replace("Bearer ", string.Empty);
 
-                return users;
+                var user = _dbcontext.Users.SingleOrDefault(x => x.Id == userID);
+
+                if (user.Token != token)
+                {
+                    //Forgery Detected
+                    return true;
+                }
+
+                return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
             }
         }
 
-        public string ReIssuetoken(string claimID)
+        public string ReIssuetoken(string claimID , string RoleID)
         {
             try
             {
@@ -71,7 +99,8 @@ namespace AdaptiveHR.Adaptive.BL.User
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, claimID)
+                    new Claim(ClaimTypes.Name, claimID),
+                     new Claim(ClaimTypes.Role, RoleID)
                     }),
                     Issuer = appSettings.Issuer,
                     Audience = appSettings.Audience,
@@ -85,11 +114,9 @@ namespace AdaptiveHR.Adaptive.BL.User
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
             }
         }
-
-
     }
 }

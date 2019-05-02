@@ -9,8 +9,7 @@ namespace AdaptiveHR.Adaptive.BL.User
     public interface IUserBL
     {
         string Authenticate(string username, string password);
-        IEnumerable<Users> GetAll();
-        string ReIssuetoken(string claimID);
-
+        string ReIssuetoken(string claimID, string roleID);
+        bool ForgeryDetected(string token , int userID);
     }
 }

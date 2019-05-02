@@ -50,9 +50,18 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<TrainingDetail> TrainingDetail { get; set; }
         public virtual DbSet<TrainingResponse> TrainingResponse { get; set; }
         public virtual DbSet<Trainings> Trainings { get; set; }
+        public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<WorkSchedule> WorkSchedule { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("data source=NGSHS36YC2\\SQL2008;initial catalog=AdaptiveHR;persist security info=True;user id=sa;password=Allen@123$%^");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -759,6 +768,19 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<UserGroup>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<Users>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -772,6 +794,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.FirstName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.IdUserGroup).HasColumnName("ID_UserGroup");
 
                 entity.Property(e => e.LastName)
                     .HasMaxLength(50)
