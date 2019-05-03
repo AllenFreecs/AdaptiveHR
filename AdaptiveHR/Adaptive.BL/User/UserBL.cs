@@ -1,5 +1,7 @@
 ﻿using Adaptive.Models.Entities;
+using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Model;
+using AdaptiveHR.Util.Communication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -17,20 +19,20 @@ namespace AdaptiveHR.Adaptive.BL.User
     public class UserBL : IUserBL
     {
         private AdaptiveHRContext _dbcontext;
+        private MailSender _mailSender;
         private AppSettings appSettings = new AppSettings();
-        public UserBL(AdaptiveHRContext adaptiveHRContext , IConfiguration configuration)
+        public UserBL(AdaptiveHRContext adaptiveHRContext , IConfiguration configuration , SettingsBL settingsBL , MailSender mailSender)
         {
             _dbcontext = adaptiveHRContext;
-            appSettings.Secret = configuration["Secret"];
-            appSettings.Timeout = Convert.ToInt32(configuration["Timeout"]);
-            appSettings.Issuer = configuration["Issuer"];
-            appSettings.Audience = configuration["Audience"];
+            appSettings = settingsBL.LoadSettings();
+            _mailSender = mailSender;
         }
-
+    
         public UserInfo Authenticate(string username, string password)
         {
             try
             {
+                
                 var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
                 // return null if user not found
                 if (user == null)
@@ -88,12 +90,26 @@ namespace AdaptiveHR.Adaptive.BL.User
             }
         }
 
-        public GlobalResponseDTO ForgotPassword(string Username)
+        public async Task<GlobalResponseDTO> ForgotPassword(string Username)
         {
-            throw new NotImplementedException();
+            try
+            {
+                EmailModel email = new EmailModel();
+                email.From = appSettings.Email;
+                email.Recipients = Username;
+                email.Body = "test";
+                email.Subject = "test subject";
+                
+                return await _mailSender.Send(email);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
         }
 
-        public GlobalResponseDTO ForgotUser(string email)
+        public async Task<GlobalResponseDTO> ForgotUser(string email)
         {
             throw new NotImplementedException();
         }

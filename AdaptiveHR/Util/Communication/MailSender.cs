@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AdaptiveHR.Adaptive.BL.Settings;
+using AdaptiveHR.Model;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,25 +12,31 @@ namespace AdaptiveHR.Util.Communication
 {
     public class MailSender
     {
-        public MailSender()
+        private AppSettings appSettings = new AppSettings();
+        public MailSender(IConfiguration configuration, SettingsBL settingsBL)
         {
-
+            appSettings = settingsBL.LoadSettings();
         }
-        public void Send(string email)
+        public async Task<GlobalResponseDTO> Send(EmailModel email)
         {
             try
             {
-                var client = new SmtpClient("smtp.gmail.com", 587)
+                var client = new SmtpClient(appSettings.SMTP, appSettings.Port)
                 {
-                    Credentials = new NetworkCredential("myusername@gmail.com", "mypwd"),
+                    Credentials = new NetworkCredential(appSettings.Email, appSettings.Password),
                     EnableSsl = true
                 };
-                client.Send("myusername@gmail.com", "myusername@gmail.com", "test", "testbody");
+
+                client.Send(email.From, email.Recipients, email.Subject, email.Body);
+
+                return new GlobalResponseDTO() { IsSuccess = true, Message = "Email sent." };
+
+
+
             }
             catch (Exception)
             {
-
-                throw;
+                return new GlobalResponseDTO() { IsSuccess = false, Message = "Server error" };
             }
         }
     }

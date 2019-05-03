@@ -1,5 +1,7 @@
 ﻿using AdaptiveHR.Adaptive.BL.PDS;
+using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Adaptive.BL.User;
+using AdaptiveHR.Util.Communication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -16,6 +18,8 @@ namespace AdaptiveHR
             services.AddSingleton<IConfiguration>(configuration);
             services.AddScoped<IPDSBL, PDSBL>();
             services.AddScoped<IUserBL, UserBL>();
+            services.AddScoped<SettingsBL, SettingsBL>();
+            services.AddScoped<MailSender, MailSender>();
         }
     }
 }

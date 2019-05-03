@@ -47,7 +47,25 @@ namespace AdaptiveHR.Controllers
             }
            
         }
-        
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("forgotpassword")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public IActionResult ForgotPassword(string UserName)
+        {
+            try
+            {
+                var user = _userBL.ForgotPassword(UserName);
+
+                return Ok(user.Result);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+
+        }
         [HttpGet]
         [Route("heartbeat")]
         public IActionResult HeartBeat()
