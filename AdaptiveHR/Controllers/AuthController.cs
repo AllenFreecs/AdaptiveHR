@@ -55,7 +55,7 @@ namespace AdaptiveHR.Controllers
         {
             try
             {
-                var user = _userBL.ForgotPassword(UserName);
+                var user =  _userBL.ForgotPassword(UserName);
 
                 return Ok(user.Result);
             }

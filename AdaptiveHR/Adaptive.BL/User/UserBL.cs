@@ -9,6 +9,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -94,12 +95,17 @@ namespace AdaptiveHR.Adaptive.BL.User
         {
             try
             {
+
+                var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "forgotpassword.html");
+                htmlTemplate = File.ReadAllText(htmlTemplate);
                 EmailModel email = new EmailModel();
                 email.From = appSettings.Email;
                 email.Recipients = Username;
-                email.Body = "test";
+                email.Body = htmlTemplate;
                 email.Subject = "test subject";
+
                 
+
                 return await _mailSender.Send(email);
             }
             catch (Exception ex)
