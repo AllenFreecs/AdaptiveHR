@@ -24,10 +24,15 @@ namespace AdaptiveHR.Util.Communication
                 var client = new SmtpClient(appSettings.SMTP, appSettings.Port)
                 {
                     Credentials = new NetworkCredential(appSettings.Email, appSettings.Password),
-                    EnableSsl = true
+                    EnableSsl = true,
+                    
                 };
 
-                client.Send(email.From, email.Recipients, email.Subject, email.Body);
+                //client.Send(email.From, email.Recipients, email.Subject, email.Body);
+                MailMessage mail = new MailMessage(email.From, email.Recipients, email.Subject, email.Body);
+                mail.IsBodyHtml = true;
+
+                client.Send(mail);
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Email sent." };
 
