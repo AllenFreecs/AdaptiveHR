@@ -17,9 +17,10 @@ namespace Adaptive.Models.Entities
         {
         }
 
-        public AdaptiveHRContext(DbContextOptions<AdaptiveHRContext> options)
+        public AdaptiveHRContext(DbContextOptions<AdaptiveHRContext> options, IHttpContextAccessor httpContext)
             : base(options)
         {
+            _httpContext = httpContext;
         }
 
         public virtual DbSet<AccrualType> AccrualType { get; set; }
@@ -860,9 +861,8 @@ namespace Adaptive.Models.Entities
         public void AddAuditTimeStamp()
         {
             var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
-
-
-            var role = ((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Role).Value;
+            
+            int? userid = _httpContext.HttpContext.User.Identity.Name != null ? Convert.ToInt32(((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Name).Value) : (int?)null;
 
 
             foreach (var entity in entities)
@@ -881,12 +881,12 @@ namespace Adaptive.Models.Entities
 
                     if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
                     {
-                        entity.Property("CreatedBy").CurrentValue = role == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : role;
+                        entity.Property("CreatedBy").CurrentValue = userid == null ? entity.Property("CreatedBy").CurrentValue == null ? 1 : entity.Property("CreatedBy").CurrentValue : userid;
                     }
 
                     if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
                     {
-                        entity.Property("UpdatedBy").CurrentValue = role == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : role;
+                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue == null ? 1 : entity.Property("UpdatedBy").CurrentValue : userid;
                     }
                 }
 
@@ -900,7 +900,7 @@ namespace Adaptive.Models.Entities
 
                     if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
                     {
-                        entity.Property("UpdatedBy").CurrentValue = role == null ? entity.Property("UpdatedBy").CurrentValue : role;
+                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue : userid;
                     }
                 }
             }
