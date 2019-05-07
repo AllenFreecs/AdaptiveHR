@@ -182,6 +182,7 @@ namespace AdaptiveHR.Util.AutoMapper
         private void AccrualTypeDTOMap()
         {
             CreateMap<AccrualType, AccrualTypeDTO>().IgnoreAllNonExisting();
+            CreateMap<AccrualTypeDTO, AccrualType>().IgnoreAllNonExisting();
         }
         private void EmployeeUpdatesDTOMap()
         {

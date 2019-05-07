@@ -115,7 +115,7 @@ namespace AdaptiveHR.Adaptive.BL.accrualtype
                         transaction.Commit();
 
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
                         return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };

@@ -860,7 +860,9 @@ namespace Adaptive.Models.Entities
         public void AddAuditTimeStamp()
         {
             var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
-            var role = ((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Role);
+
+
+            var role = ((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Role).Value;
 
 
             foreach (var entity in entities)
