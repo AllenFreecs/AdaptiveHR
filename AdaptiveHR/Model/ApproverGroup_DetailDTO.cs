@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AdaptiveHR.Model
 {
-    public class ApproverGroup_DetailDTO
+    public class ApproverGroupDetailDTO
     {
 	   public int Id { get; set; }
        public int? ID_Approver { get; set; }

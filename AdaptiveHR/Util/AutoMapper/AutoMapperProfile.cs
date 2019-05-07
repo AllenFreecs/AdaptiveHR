@@ -20,7 +20,7 @@ namespace AdaptiveHR.Util.AutoMapper
             SeminarDTOMap();
             WorkScheduleDTOMap();
             TrainingsDTOMap();
-            Training_detailDTOMap();
+            TrainingDetailDTOMap();
             TrainingResponseDTOMap();
             AttendanceDTOMap();
             PayslipDTOMap();
@@ -37,12 +37,12 @@ namespace AdaptiveHR.Util.AutoMapper
             OTDTOMap();
             LeaveDTOMap();
             LeaveTypeDTOMap();
-            Leave_DetailDTOMap();
+            LeaveDetailDTOMap();
             ApproverGroupDTOMap();
-            ApproverGroup_DetailDTOMap();
+            ApproverGroupDetailDTOMap();
             LeaveCreditsDTOMap();
             LeaveParameterDTOMap();
-            LeaveParameter_detailDTOMap();
+            LeaveParameterDetailDTOMap();
             AccrualTypeDTOMap();
             EmployeeUpdatesDTOMap();
             StatusDTOMap();
@@ -83,9 +83,9 @@ namespace AdaptiveHR.Util.AutoMapper
         {
             CreateMap<Trainings, TrainingsDTO>().IgnoreAllNonExisting();
         }
-        private void Training_detailDTOMap()
+        private void TrainingDetailDTOMap()
         {
-            CreateMap<TrainingDetail, Training_detailDTO>().IgnoreAllNonExisting();
+            CreateMap<TrainingDetail, TrainingDetailDTO>().IgnoreAllNonExisting();
         }
         private void TrainingResponseDTOMap()
         {
@@ -151,17 +151,17 @@ namespace AdaptiveHR.Util.AutoMapper
         {
             CreateMap<LeaveType, LeaveTypeDTO>().IgnoreAllNonExisting();
         }
-        private void Leave_DetailDTOMap()
+        private void LeaveDetailDTOMap()
         {
-            CreateMap<LeaveDetail, Leave_DetailDTO>().IgnoreAllNonExisting();
+            CreateMap<LeaveDetail, LeaveDetailDTO>().IgnoreAllNonExisting();
         }
         private void ApproverGroupDTOMap()
         {
             CreateMap<ApproverGroup, ApproverGroupDTO>().IgnoreAllNonExisting();
         }
-        private void ApproverGroup_DetailDTOMap()
+        private void ApproverGroupDetailDTOMap()
         {
-            CreateMap<ApproverGroupDetail, ApproverGroup_DetailDTO>().IgnoreAllNonExisting();
+            CreateMap<ApproverGroupDetail, ApproverGroupDetailDTO>().IgnoreAllNonExisting();
         }
         private void LeaveCreditsDTOMap()
         {
@@ -171,9 +171,9 @@ namespace AdaptiveHR.Util.AutoMapper
         {
             CreateMap<LeaveParameter, LeaveParameterDTO>().IgnoreAllNonExisting();
         }
-        private void LeaveParameter_detailDTOMap()
+        private void LeaveParameterDetailDTOMap()
         {
-            CreateMap<LeaveParameterDetail, LeaveParameter_detailDTO>().IgnoreAllNonExisting();
+            CreateMap<LeaveParameterDetail, LeaveParameterDetailDTO>().IgnoreAllNonExisting();
         }
         private void AccrualTypeDTOMap()
         {

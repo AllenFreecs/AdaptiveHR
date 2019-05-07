@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AdaptiveHR.Model
 {
-    public class Leave_DetailDTO
+    public class LeaveDetailDTO
     {
 	   public int Id { get; set; }
        public DateTime? Date { get; set; }

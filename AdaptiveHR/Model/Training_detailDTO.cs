@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AdaptiveHR.Model
 {
-    public class Training_detailDTO
+    public class TrainingDetailDTO
     {
 	   public int Id { get; set; }
        public int? ID_Employee { get; set; }
