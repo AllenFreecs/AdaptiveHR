@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -859,7 +860,8 @@ namespace Adaptive.Models.Entities
         public void AddAuditTimeStamp()
         {
             var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
-            var user = _httpContext.HttpContext.User.Identity.Name;
+            var role = ((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Role);
+
 
             foreach (var entity in entities)
             {
@@ -875,15 +877,15 @@ namespace Adaptive.Models.Entities
                         entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
                     }
 
-                    //if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
-                    //{
-                    //    entity.Property("CreatedBy").CurrentValue = user == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : user;
-                    //}
+                    if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
+                    {
+                        entity.Property("CreatedBy").CurrentValue = role == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : role;
+                    }
 
-                    //if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    //{
-                    //    entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : user;
-                    //}
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = role == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : role;
+                    }
                 }
 
                 if (entity.State == EntityState.Modified)
@@ -894,10 +896,10 @@ namespace Adaptive.Models.Entities
                         entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
                     }
 
-                    //if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    //{
-                    //    entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue : user;
-                    //}
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = role == null ? entity.Property("UpdatedBy").CurrentValue : role;
+                    }
                 }
             }
         }
