@@ -2,6 +2,7 @@
 using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Model;
 using AdaptiveHR.Util.Communication;
+using AdaptiveHR.Util.Encryption;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,7 @@ namespace AdaptiveHR.Adaptive.BL.User
     {
         private AdaptiveHRContext _dbcontext;
         private MailSender _mailSender;
-        private AppSettings appSettings = new AppSettings();
+        private AppSettings appSettings;
         public UserBL(AdaptiveHRContext adaptiveHRContext , IConfiguration configuration , SettingsBL settingsBL , MailSender mailSender)
         {
             _dbcontext = adaptiveHRContext;
@@ -76,7 +77,7 @@ namespace AdaptiveHR.Adaptive.BL.User
             {
 
                 string input = userCreationDTO.Password;
-
+                string password = RIJEncrypt.Encrypt(input, appSettings.Salt);
                 var hasSymbols = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
 
                 if (!hasSymbols.IsMatch(input))
@@ -89,7 +90,8 @@ namespace AdaptiveHR.Adaptive.BL.User
                     try
                     {
 
-                        var data = Mapper.Map<UserCreationDTO, Pds>(userCreationDTO);
+                        var data = Mapper.Map<UserCreationDTO, Users>(userCreationDTO);
+                        data.Password = password;
                         _dbcontext.Entry(data).State = EntityState.Added;
                         await _dbcontext.SaveChangesAsync();
                         transaction.Commit();
@@ -110,7 +112,7 @@ namespace AdaptiveHR.Adaptive.BL.User
             catch (Exception)
             {
 
-                throw;
+                return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
             }
         }
 

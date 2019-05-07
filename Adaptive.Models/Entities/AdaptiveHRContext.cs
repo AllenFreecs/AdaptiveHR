@@ -875,15 +875,15 @@ namespace Adaptive.Models.Entities
                         entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
                     }
 
-                    if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
-                    {
-                        entity.Property("CreatedBy").CurrentValue = user == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : user;
-                    }
+                    //if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
+                    //{
+                    //    entity.Property("CreatedBy").CurrentValue = user == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : user;
+                    //}
 
-                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    {
-                        entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : user;
-                    }
+                    //if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    //{
+                    //    entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : user;
+                    //}
                 }
 
                 if (entity.State == EntityState.Modified)
@@ -894,10 +894,10 @@ namespace Adaptive.Models.Entities
                         entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
                     }
 
-                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    {
-                        entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue : user;
-                    }
+                    //if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    //{
+                    //    entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue : user;
+                    //}
                 }
             }
         }
