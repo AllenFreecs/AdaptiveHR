@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Adaptive.Models.Entities
 {
+
     public partial class AdaptiveHRContext : DbContext
     {
+        private readonly IHttpContextAccessor _httpContext;
         public AdaptiveHRContext()
         {
         }
@@ -38,6 +44,7 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<LeaveType> LeaveType { get; set; }
         public virtual DbSet<Ob> Ob { get; set; }
         public virtual DbSet<Ot> Ot { get; set; }
+        public virtual DbSet<PasswordHistory> PasswordHistory { get; set; }
         public virtual DbSet<PayrollItemType> PayrollItemType { get; set; }
         public virtual DbSet<PayrollUpload> PayrollUpload { get; set; }
         public virtual DbSet<Payslip> Payslip { get; set; }
@@ -520,6 +527,19 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<PasswordHistory>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IdUser).HasColumnName("ID_User");
+
+                entity.Property(e => e.Password).IsUnicode(false);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<PayrollItemType>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -795,11 +815,19 @@ namespace Adaptive.Models.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Guid)
+                    .HasColumnName("GUID")
+                    .IsUnicode(false);
+
                 entity.Property(e => e.IdUserGroup).HasColumnName("ID_UserGroup");
 
                 entity.Property(e => e.LastName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.PasswordExpirationDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Token).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
@@ -826,6 +854,64 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
+        }
+
+        public void AddAuditTimeStamp()
+        {
+            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
+            var user = _httpContext.HttpContext.User.Identity.Name;
+
+            foreach (var entity in entities)
+            {
+                if (entity.State == EntityState.Added)
+                {
+                    if (entity.Entity.GetType().GetProperty("CreatedDate") != null)
+                    {
+                        entity.Property("CreatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
+                    {
+                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
+                    {
+                        entity.Property("CreatedBy").CurrentValue = user == null ? entity.Property("CreatedBy").CurrentValue == null ? "Admin" : entity.Property("CreatedBy").CurrentValue : user;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue == null ? "Admin" : entity.Property("UpdatedBy").CurrentValue : user;
+                    }
+                }
+
+                if (entity.State == EntityState.Modified)
+                {
+                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
+                    {
+
+                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = user == null ? entity.Property("UpdatedBy").CurrentValue : user;
+                    }
+                }
+            }
+        }
+
+        public override int SaveChanges()
+        {
+            AddAuditTimeStamp();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AddAuditTimeStamp();
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
