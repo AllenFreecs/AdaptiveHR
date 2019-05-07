@@ -12,6 +12,7 @@ namespace AdaptiveHR.Util.AutoMapper
     {
         public AutoMapperProfile()
         {
+            AuthDTOMap(); //Auth
             PDSDTOMap();
             EmployeeDTOMap();
             DocsDTOMap();
@@ -50,7 +51,10 @@ namespace AdaptiveHR.Util.AutoMapper
             HumanResourceStatusDTOMap();
 
         }
-
+        private void AuthDTOMap()
+        {
+            CreateMap<Users, UserCreationDTO>().IgnoreAllNonExisting();
+        }
         private void PDSDTOMap()
         {
             CreateMap<Pds, PDSDTO>().IgnoreAllNonExisting();

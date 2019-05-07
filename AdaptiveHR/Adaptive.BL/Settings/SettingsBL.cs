@@ -30,6 +30,7 @@ namespace AdaptiveHR.Adaptive.BL.Settings
                 appSettings.Password = _configuration["Password"];
                 appSettings.Port = Convert.ToInt32(_configuration["Port"]);
                 appSettings.UseSSL = Convert.ToBoolean(_configuration["UseSSL"]);
+                appSettings.Salt = _configuration["Salt"];
 
                 return appSettings;
             }

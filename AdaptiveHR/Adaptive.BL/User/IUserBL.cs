@@ -14,6 +14,8 @@ namespace AdaptiveHR.Adaptive.BL.User
         bool ForgeryDetected(string token , int userID);
         Task<GlobalResponseDTO> ForgotPassword(string Username);
         Task<GlobalResponseDTO> ForgotUser(string email);
+        Task<GlobalResponseDTO> CreateUser(UserCreationDTO userCreationDTO);
+        Task<GlobalResponseDTO> ResetPassword(string guid,string password);
 
     }
 }

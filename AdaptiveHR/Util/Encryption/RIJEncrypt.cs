@@ -27,7 +27,7 @@ namespace AdaptiveHR.Util.Encryption
         /// <param name="text" />The text to encrypt
         /// <param name="salt" />The pasword salt
         /// <returns>The encrypted text</returns>
-        public static string EncryptRijndael(string text, string salt)
+        public static string Encrypt(string text, string salt)
         {
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
@@ -46,7 +46,7 @@ namespace AdaptiveHR.Util.Encryption
         }
         #endregion
 
-        #region Rijndael Dycryption
+        #region Rijndael Decryption
         /// <summary>
         /// Checks if a string is base64 encoded
         /// </summary>
@@ -66,7 +66,7 @@ namespace AdaptiveHR.Util.Encryption
         /// <param name="cipherText" />The encrypted BASE64 text
         /// <param name="salt" />The pasword salt
         /// <returns>The decrypted text</returns>
-        public static string DecryptRijndael(string cipherText, string salt)
+        public static string Decrypt(string cipherText, string salt)
         {
             if (string.IsNullOrEmpty(cipherText))
                 throw new ArgumentNullException("cipherText");

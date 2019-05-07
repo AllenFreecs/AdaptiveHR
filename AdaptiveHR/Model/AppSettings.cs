@@ -16,6 +16,7 @@ namespace AdaptiveHR.Model
         public string Password { get; set; }
         public int Port { get; set; }
         public bool UseSSL { get; set; }
-   
+        public string Salt { get; set; }
+
     }
 }

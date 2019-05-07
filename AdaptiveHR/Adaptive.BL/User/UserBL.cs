@@ -2,6 +2,7 @@
 using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Model;
 using AdaptiveHR.Util.Communication;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AdaptiveHR.Adaptive.BL.User
@@ -68,6 +70,50 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         }
 
+        public async Task<GlobalResponseDTO> CreateUser(UserCreationDTO userCreationDTO)
+        {
+            try
+            {
+
+                string input = userCreationDTO.Password;
+
+                var hasSymbols = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
+
+                if (!hasSymbols.IsMatch(input))
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Password not acceptable" };
+                }
+
+                using (var transaction = _dbcontext.Database.BeginTransaction())
+                {
+                    try
+                    {
+
+                        var data = Mapper.Map<UserCreationDTO, Pds>(userCreationDTO);
+                        _dbcontext.Entry(data).State = EntityState.Added;
+                        await _dbcontext.SaveChangesAsync();
+                        transaction.Commit();
+
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                        throw;
+                    }
+
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "User was created" };
+                }
+
+                   
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public bool ForgeryDetected(string token, int userID)
         {
             try
@@ -95,6 +141,9 @@ namespace AdaptiveHR.Adaptive.BL.User
         {
             try
             {
+
+                string guid = Guid.NewGuid().ToString("N");
+
 
                 var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "forgotpassword.html");
                 htmlTemplate = File.ReadAllText(htmlTemplate);
@@ -149,6 +198,11 @@ namespace AdaptiveHR.Adaptive.BL.User
                 LogManager.GetCurrentClassLogger().Error(ex);
                 throw new Exception("Server processes error", ex);
             }
+        }
+
+        public Task<GlobalResponseDTO> ResetPassword(string guid,string password)
+        {
+            throw new NotImplementedException();
         }
     }
 }
