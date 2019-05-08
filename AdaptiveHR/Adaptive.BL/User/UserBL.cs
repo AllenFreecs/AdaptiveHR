@@ -125,7 +125,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                         string key = string.Concat(data.Id, "-", DateTime.UtcNow);
                         string encid = RIJEncrypt.Encrypt(key, appSettings.Salt);
 
-                        string url = Path.Combine(appSettings.ClientURL, key);
+                        string url = Path.Combine(appSettings.ClientURL, encid);
 
                         var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "confirmation.html");
 
