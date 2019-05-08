@@ -11,6 +11,7 @@ namespace Adaptive.Models.Entities
         public DateTime? UpdatedDate { get; set; }
         public int? UpdatedBy { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsConfirmed { get; set; }
         public int? IdUserGroup { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

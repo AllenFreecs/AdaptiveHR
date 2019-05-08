@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Adaptive.Models.Entities
 {
-
     public partial class AdaptiveHRContext : DbContext
     {
         private readonly IHttpContextAccessor _httpContext;
@@ -82,6 +81,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -97,6 +98,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdPds).HasColumnName("ID_PDS");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.TimeScheduled).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -107,6 +110,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -125,6 +130,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
@@ -140,6 +147,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -154,6 +163,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Path).IsUnicode(false);
 
@@ -178,6 +189,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdPds).HasColumnName("ID_PDS");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -191,6 +204,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdEmailProfile).HasColumnName("ID_EmailProfile");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Message).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -201,6 +216,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
@@ -218,6 +235,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Attachment).IsUnicode(false);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Message).IsUnicode(false);
 
@@ -274,6 +293,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdPosition).HasColumnName("ID_Position");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.MotherBirthDay).HasColumnType("datetime");
 
                 entity.Property(e => e.MotherFirstName).IsUnicode(false);
@@ -323,6 +344,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdStatus).HasColumnName("ID_Status");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
@@ -340,6 +363,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdPds).HasColumnName("ID_PDS");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -352,6 +377,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -373,6 +400,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.EndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.IdPds).HasColumnName("ID_PDS");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Job1)
                     .HasColumnName("Job")
@@ -397,6 +426,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdLeaveType).HasColumnName("ID_LeaveType");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -413,6 +444,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
 
                 entity.Property(e => e.IdLeaveType).HasColumnName("ID_LeaveType");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
@@ -431,6 +464,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdWorkType).HasColumnName("ID_WorkType");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
@@ -439,6 +474,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -459,6 +496,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdLeaveType).HasColumnName("ID_LeaveType");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
@@ -467,6 +506,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
@@ -490,6 +531,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
                 entity.Property(e => e.IdTraining).HasColumnName("ID_Training");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
@@ -515,6 +558,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Hours).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
@@ -548,6 +593,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -562,6 +609,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CutoffPeriodEndDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CutoffPeriodStartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -583,6 +632,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.IdPayrollItemType).HasColumnName("ID_PayrollItemType");
 
                 entity.Property(e => e.IdPayrollUpLoad).HasColumnName("ID_PayrollUpLoad");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.PayrollItem)
                     .HasMaxLength(100)
@@ -635,6 +686,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdSeminar).HasColumnName("ID_Seminar");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.LastName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -668,6 +721,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdPds).HasColumnName("ID_PDS");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Location).IsUnicode(false);
 
                 entity.Property(e => e.Seminar1)
@@ -689,6 +744,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdSmsprofile).HasColumnName("ID_SMSProfile");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Message).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -703,6 +760,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).IsUnicode(false);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Message).IsUnicode(false);
 
@@ -719,6 +778,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Message)
                     .HasMaxLength(160)
                     .IsUnicode(false);
@@ -733,6 +794,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -753,6 +816,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdTrainingResponse).HasColumnName("ID_TrainingResponse");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.TrainingNote).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
@@ -763,6 +828,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -776,6 +843,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.DateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Location)
                     .HasMaxLength(100)
@@ -850,6 +919,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdEmployee).HasColumnName("ID_Employee");
 
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
@@ -857,11 +928,10 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
         }
-
         public void AddAuditTimeStamp()
         {
             var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
-            
+
             int? userid = _httpContext.HttpContext.User.Identity.Name != null ? Convert.ToInt32(((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Name).Value) : (int?)null;
 
 
