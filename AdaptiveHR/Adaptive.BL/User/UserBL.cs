@@ -139,6 +139,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                         email.Body = htmlTemplate;
                         email.Subject = "Your Adaptive Confirmation Link";
 
+                        await _mailSender.Send(email);
 
 
                     }
