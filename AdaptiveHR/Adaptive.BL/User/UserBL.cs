@@ -155,7 +155,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                 
 
 
-                return new GlobalResponseDTO() { IsSuccess = false, Message = "User was created" };
+                return new GlobalResponseDTO() { IsSuccess = true, Message = "User was created" };
 
 
             }
