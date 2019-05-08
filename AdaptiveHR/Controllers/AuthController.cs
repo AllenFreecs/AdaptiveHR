@@ -66,6 +66,45 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("forgotusername")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public IActionResult ForgotUsername(string Email)
+        {
+            try
+            {
+                var user = _userBL.ForgotUser(Email);
+
+                return Ok(user.Result);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("reset")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> ResetPassword(string guid, string password)
+        {
+            try
+            {
+                var user = await _userBL.ResetPassword(guid, password);
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+
+        }
         [HttpGet]
         [Route("heartbeat")]
         public IActionResult HeartBeat()

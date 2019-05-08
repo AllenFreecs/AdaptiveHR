@@ -36,8 +36,10 @@ namespace AdaptiveHR.Adaptive.BL.User
         {
             try
             {
-                
-                var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+
+                string Encpassword = RIJEncrypt.Encrypt(password, appSettings.Salt);
+
+                var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == Encpassword);
                 // return null if user not found
                 if (user == null)
                     return null;
@@ -75,6 +77,13 @@ namespace AdaptiveHR.Adaptive.BL.User
         {
             try
             {
+                //Check if theres an existing Username
+
+                if (_dbcontext.Users.Where(c => c.Username == userCreationDTO.UserName).Any())
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Username must be unique" };
+                }
+
 
                 string input = userCreationDTO.Password;
                 string password = RIJEncrypt.Encrypt(input, appSettings.Salt);
@@ -144,20 +153,40 @@ namespace AdaptiveHR.Adaptive.BL.User
             try
             {
 
-                string guid = Guid.NewGuid().ToString("N");
+                bool existing = _dbcontext.Users.Where(c => c.Username == Username).Any();
+
+                if (existing)
+                {
+
+                    var user = _dbcontext.Users.Where(c => c.Username == Username).SingleOrDefault();
+                    string key = string.Concat(user.Id, "-", DateTime.UtcNow);
+
+                    string encId = RIJEncrypt.Encrypt(key, appSettings.Salt);
+
+                    string url = Path.Combine(appSettings.ClientURL, encId);
+
+                    var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "forgotpassword.html");
 
 
-                var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "forgotpassword.html");
-                htmlTemplate = File.ReadAllText(htmlTemplate);
-                EmailModel email = new EmailModel();
-                email.From = appSettings.Email;
-                email.Recipients = Username;
-                email.Body = htmlTemplate;
-                email.Subject = "test subject";
+                    htmlTemplate = File.ReadAllText(htmlTemplate);
+                    htmlTemplate = htmlTemplate.Replace("{link}", url);
 
-                
+                    EmailModel email = new EmailModel();
+                    email.From = appSettings.Email;
+                    email.Recipients = user.Email;
+                    email.Body = htmlTemplate;
+                    email.Subject = "Your Adaptive Reset Link";
 
-                return await _mailSender.Send(email);
+
+
+                    return await _mailSender.Send(email);
+                }
+                else
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Username not exist" };
+                }
+
+               
             }
             catch (Exception ex)
             {
@@ -168,7 +197,43 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         public async Task<GlobalResponseDTO> ForgotUser(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bool existing = _dbcontext.Users.Where(c => c.Email == email).Any();
+
+                if (existing)
+                {
+                    string Username = _dbcontext.Users.Where(c => c.Email == email).Select(c => c.Username).SingleOrDefault().ToString();
+                    
+
+
+                    var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "forgotusername.html");
+
+
+                    htmlTemplate = File.ReadAllText(htmlTemplate);
+                    htmlTemplate = htmlTemplate.Replace("{UserName}", Username);
+
+                    EmailModel emailmodel = new EmailModel();
+                    emailmodel.From = appSettings.Email;
+                    emailmodel.Recipients = email;
+                    emailmodel.Body = htmlTemplate;
+                    emailmodel.Subject = "Your Adaptive Username";
+
+                    return await _mailSender.Send(emailmodel);
+                }
+                else
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Username not exist" };
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+
         }
 
         public string ReIssuetoken(string claimID , string RoleID)
@@ -202,9 +267,56 @@ namespace AdaptiveHR.Adaptive.BL.User
             }
         }
 
-        public Task<GlobalResponseDTO> ResetPassword(string guid,string password)
+        public async Task<GlobalResponseDTO> ResetPassword(string guid,string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //Check guid authenticity
+                string decguid = RIJEncrypt.Decrypt(guid, appSettings.Salt);
+                int id = Convert.ToInt32(decguid.Substring(0, decguid.IndexOf('-')));
+                DateTime resetDate = Convert.ToDateTime(decguid.Substring(decguid.LastIndexOf('-') + 1));
+
+                if ((DateTime.UtcNow - resetDate).TotalMinutes > appSettings.ResetTimeout)
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Reset token is expired" };
+                }
+                else
+                {
+                    //Encrypt password
+                    password = RIJEncrypt.Encrypt(password, appSettings.Salt);
+
+
+                    using (var transaction = _dbcontext.Database.BeginTransaction())
+                    {
+                        try
+                        {
+
+                            var data = _dbcontext.Users.Where(c => c.Id == id).SingleOrDefault();
+                            data.Password = password;
+                            _dbcontext.Entry(data).State = EntityState.Modified;
+                            await _dbcontext.SaveChangesAsync();
+                            transaction.Commit();
+
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                            throw;
+                        }
+
+                        return new GlobalResponseDTO() { IsSuccess = true, Message = "Password was reset." };
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+                
         }
     }
 }

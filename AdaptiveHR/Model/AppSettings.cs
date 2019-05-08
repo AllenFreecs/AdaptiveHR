@@ -17,6 +17,8 @@ namespace AdaptiveHR.Model
         public int Port { get; set; }
         public bool UseSSL { get; set; }
         public string Salt { get; set; }
+        public string ClientURL { get; set; }
+        public int ResetTimeout { get; set; }
 
     }
 }

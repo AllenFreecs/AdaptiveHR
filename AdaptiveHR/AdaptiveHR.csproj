@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <None Remove="Template\Email\forgotpassword.html" />
+    <None Remove="Template\Email\forgotusername.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Template\Email\forgotusername.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Template\Email\forgotpassword.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
