@@ -46,4 +46,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Template\Email\confirmation.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

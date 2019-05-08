@@ -45,7 +45,7 @@ namespace AdaptiveHR.Controllers
                 LogManager.GetCurrentClassLogger().Error(ex);
                 return BadRequest(ex.Message);
             }
-           
+
         }
         [AllowAnonymous]
         [HttpPost]
@@ -55,7 +55,7 @@ namespace AdaptiveHR.Controllers
         {
             try
             {
-                var user =  _userBL.ForgotPassword(UserName);
+                var user = _userBL.ForgotPassword(UserName);
 
                 return Ok(user.Result);
             }
@@ -138,8 +138,29 @@ namespace AdaptiveHR.Controllers
             }
 
 
-          
+
         }
 
+
+
+        [HttpPost]
+        [Authorize(Roles = UserRole.Admin)]
+        [Route("CreateUser")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> CreateUser(UserCreationDTO userCreationDTO)
+        {
+            try
+            {
+                var user = await _userBL.CreateUser(userCreationDTO);
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

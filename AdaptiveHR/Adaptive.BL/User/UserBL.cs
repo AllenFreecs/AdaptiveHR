@@ -73,6 +73,19 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         }
 
+        public Task<GlobalResponseDTO> ConfirmRegistration(string guid)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
+
         public async Task<GlobalResponseDTO> CreateUser(UserCreationDTO userCreationDTO)
         {
             try
@@ -83,10 +96,14 @@ namespace AdaptiveHR.Adaptive.BL.User
                 {
                     return new GlobalResponseDTO() { IsSuccess = false, Message = "Username must be unique" };
                 }
-
+                if (_dbcontext.Users.Where(c => c.Email == userCreationDTO.Email).Any())
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Email already in use." };
+                }
 
                 string input = userCreationDTO.Password;
                 string password = RIJEncrypt.Encrypt(input, appSettings.Salt);
+                
                 var hasSymbols = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$");
 
                 if (!hasSymbols.IsMatch(input))
@@ -104,19 +121,43 @@ namespace AdaptiveHR.Adaptive.BL.User
                         _dbcontext.Entry(data).State = EntityState.Added;
                         await _dbcontext.SaveChangesAsync();
                         transaction.Commit();
+                        //Send confirmation email
+                        string key = string.Concat(data.Id, "-", DateTime.UtcNow);
+                        string encid = RIJEncrypt.Encrypt(key, appSettings.Salt);
+
+                        string url = Path.Combine(appSettings.ClientURL, key);
+
+                        var htmlTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Template", "Email", "confirmation.html");
+
+
+                        htmlTemplate = File.ReadAllText(htmlTemplate);
+                        htmlTemplate = htmlTemplate.Replace("{link}", url);
+
+                        EmailModel email = new EmailModel();
+                        email.From = appSettings.Email;
+                        email.Recipients = data.Email;
+                        email.Body = htmlTemplate;
+                        email.Subject = "Your Adaptive Confirmation Link";
+
+
 
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
                         return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
                         throw;
                     }
 
-                    return new GlobalResponseDTO() { IsSuccess = false, Message = "User was created" };
-                }
-
                    
+                }
+              
+                
+
+
+                return new GlobalResponseDTO() { IsSuccess = false, Message = "User was created" };
+
+
             }
             catch (Exception)
             {

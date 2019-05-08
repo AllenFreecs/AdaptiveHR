@@ -16,6 +16,7 @@ namespace AdaptiveHR.Adaptive.BL.User
         Task<GlobalResponseDTO> ForgotUser(string email);
         Task<GlobalResponseDTO> CreateUser(UserCreationDTO userCreationDTO);
         Task<GlobalResponseDTO> ResetPassword(string guid,string password);
+        Task<GlobalResponseDTO> ConfirmRegistration(string guid);
 
     }
 }
