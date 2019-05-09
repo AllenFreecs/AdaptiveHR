@@ -39,10 +39,11 @@ namespace AdaptiveHR.Adaptive.BL.User
 
                 string Encpassword = RIJEncrypt.Encrypt(password, appSettings.Salt);
 
-                var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == Encpassword);
+                var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == Encpassword && x.IsActive == true && x.IsConfirmed == true);
                 // return null if user not found
                 if (user == null)
                     return null;
+
                 var Token = ReIssuetoken(user.Id.ToString(), user.IdUserGroup.ToString());
                 user.Token = Token;
                 using (var transaction = _dbcontext.Database.BeginTransaction())
