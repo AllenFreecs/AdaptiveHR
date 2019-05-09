@@ -55,7 +55,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                         transaction.Commit();
 
                     }
-                    catch(Exception ex )
+                    catch
                     {
                         transaction.Rollback();
                         throw;
@@ -184,7 +184,7 @@ namespace AdaptiveHR.Adaptive.BL.User
 
 
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         transaction.Rollback();
                         return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
@@ -208,13 +208,13 @@ namespace AdaptiveHR.Adaptive.BL.User
             }
         }
 
-        public bool ForgeryDetected(string token, int userID)
+        public async Task<bool> ForgeryDetected(string token, int userID)
         {
             try
             {
                 token = token.Replace("Bearer ", string.Empty);
 
-                var user = _dbcontext.Users.SingleOrDefault(x => x.Id == userID);
+                var user = await  _dbcontext.Users.SingleOrDefaultAsync(x => x.Id == userID);
 
                 if (user.Token != token)
                 {

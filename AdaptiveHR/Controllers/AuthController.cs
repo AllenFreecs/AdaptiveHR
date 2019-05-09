@@ -127,7 +127,7 @@ namespace AdaptiveHR.Controllers
         }
         [HttpGet]
         [Route("heartbeat")]
-        public IActionResult HeartBeat()
+        public async Task<IActionResult> HeartBeat()
         {
             try
             {
@@ -136,13 +136,14 @@ namespace AdaptiveHR.Controllers
                     var accesToken = Request.Headers["Authorization"];
                     string claimid = User.FindFirstValue(ClaimTypes.Name);
                     string roleid = User.FindFirstValue(ClaimTypes.Role);
-                    if (!_userBL.ForgeryDetected(accesToken, Convert.ToInt32(claimid)))
+                    bool Forged = await _userBL.ForgeryDetected(accesToken, Convert.ToInt32(claimid));
+                    if (!Forged)
                     {
                         return Ok(_userBL.ReIssuetoken(claimid, roleid));
                     }
                     else
                     {
-                        return BadRequest(new { message = "Forgery detected." });
+                        return BadRequest(new { message = "Invalid token" });
                     }
 
 
