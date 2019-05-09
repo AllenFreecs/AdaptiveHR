@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adaptive.Models.Entities;
+using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Model;
+using AdaptiveHR.Util.Encryption;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -13,9 +15,11 @@ namespace AdaptiveHR.Adaptive.BL.PDS
     public class PDSBL : IPDSBL
     {
         private AdaptiveHRContext _dbcontext;
-        public PDSBL(AdaptiveHRContext adaptiveHRContext)
+        private AppSettings appSettings;
+        public PDSBL(AdaptiveHRContext adaptiveHRContext, SettingsBL settingsBL)
         {
             _dbcontext = adaptiveHRContext;
+            appSettings = settingsBL.LoadSettings();
         }
 
         public async Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs)
@@ -49,6 +53,27 @@ namespace AdaptiveHR.Adaptive.BL.PDS
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Data has been deleted" };
 
+
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
+
+        public async Task<string> GenerateSessionID()
+        {
+            try
+            {
+               
+                string SessionExpiy = DateTime.Now.AddMinutes(30).ToString();
+
+             
+
+                string sessionid = await Task.FromResult(RIJEncrypt.Encrypt(SessionExpiy, appSettings.Salt));
+
+                return sessionid;
 
             }
             catch (Exception ex)
@@ -124,6 +149,31 @@ namespace AdaptiveHR.Adaptive.BL.PDS
                 }
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Data has been saved." };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
+
+        public bool ValidateSessionID(string sessionid)
+        {
+            try
+            {
+                //Check guid authenticity
+                string decguid = RIJEncrypt.Decrypt(sessionid, appSettings.Salt);
+                DateTime sessionExpiry = Convert.ToDateTime(decguid);
+                if ((DateTime.Now - sessionExpiry).TotalMinutes > appSettings.ResetTimeout)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+
+
             }
             catch (Exception ex)
             {

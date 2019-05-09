@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.PDS;
 using AdaptiveHR.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 namespace AdaptiveHR.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PDSController : ControllerBase
@@ -93,6 +95,52 @@ namespace AdaptiveHR.Controllers
             {
                 var data = await _pdsbl.SavePDS(model);
 
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("saveguestdata")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> SavePDSGuestData(PDSDTO model)
+        {
+            try
+            {
+
+                if (model.SessionID != null && _pdsbl.ValidateSessionID(model.SessionID))
+                {
+                    model.Id = 0;
+                    var data = await _pdsbl.SavePDS(model);
+                    return Ok(data);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("sessionid")]
+        [ProducesResponseType(typeof(string), 200)]
+        public async Task<IActionResult> GenerateSessionID()
+        {
+            try
+            {
+                var data = await _pdsbl.GenerateSessionID();
                 return Ok(data);
             }
             catch (Exception ex)

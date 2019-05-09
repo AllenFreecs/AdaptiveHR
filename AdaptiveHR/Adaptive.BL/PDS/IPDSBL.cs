@@ -12,7 +12,8 @@ namespace AdaptiveHR.Adaptive.BL.PDS
         Task<PDSDTO> GetPDSData(int ID);
         Task<GlobalResponseDTO> SavePDS(PDSDTO model);
         Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs);
-
+        Task<string> GenerateSessionID();
+        bool ValidateSessionID(string sessionid);
 
     }
 }
