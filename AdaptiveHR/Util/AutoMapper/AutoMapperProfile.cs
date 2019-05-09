@@ -49,6 +49,7 @@ namespace AdaptiveHR.Util.AutoMapper
             StatusDTOMap();
             HumanResourceDTOMap();
             HumanResourceStatusDTOMap();
+            InvitationDTOMap();
 
         }
         private void AuthDTOMap()
@@ -201,6 +202,10 @@ namespace AdaptiveHR.Util.AutoMapper
             CreateMap<HumanResourceStatus, HumanResourceStatusDTO>().IgnoreAllNonExisting();
         }
 
+        private void InvitationDTOMap()
+        {
+            CreateMap<Invitation, InvitationDTO>().IgnoreAllNonExisting();
+        }
 
 
     }

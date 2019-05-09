@@ -36,6 +36,7 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<EmployeeUpdates> EmployeeUpdates { get; set; }
         public virtual DbSet<HumanResource> HumanResource { get; set; }
         public virtual DbSet<HumanResourceStatus> HumanResourceStatus { get; set; }
+        public virtual DbSet<Invitation> Invitation { get; set; }
         public virtual DbSet<Job> Job { get; set; }
         public virtual DbSet<Leave> Leave { get; set; }
         public virtual DbSet<LeaveCredits> LeaveCredits { get; set; }
@@ -381,6 +382,31 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Invitation>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.FirstName).IsUnicode(false);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastName).IsUnicode(false);
+
+                entity.Property(e => e.MiddleName).IsUnicode(false);
+
+                entity.Property(e => e.Phonenumber).IsUnicode(false);
+
+                entity.Property(e => e.SendSms).HasColumnName("SendSMS");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
@@ -891,6 +917,10 @@ namespace Adaptive.Models.Entities
                     .IsUnicode(false);
 
                 entity.Property(e => e.IdUserGroup).HasColumnName("ID_UserGroup");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IsConfirmed).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.LastName)
                     .HasMaxLength(50)

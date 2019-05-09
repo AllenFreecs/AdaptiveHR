@@ -12,6 +12,7 @@ using AdaptiveHR.Adaptive.BL.employee;
 using AdaptiveHR.Adaptive.BL.employeeupdates;
 using AdaptiveHR.Adaptive.BL.humanresource;
 using AdaptiveHR.Adaptive.BL.humanresourcestatus;
+using AdaptiveHR.Adaptive.BL.invitation;
 using AdaptiveHR.Adaptive.BL.job;
 using AdaptiveHR.Adaptive.BL.leave;
 using AdaptiveHR.Adaptive.BL.leavecredits;
@@ -90,6 +91,7 @@ namespace AdaptiveHR
             services.AddScoped<IStatusBL, StatusBL>();
             services.AddScoped<IHumanResourceBL, HumanResourceBL>();
             services.AddScoped<IHumanResourceStatusBL, HumanResourceStatusBL>();
+            services.AddScoped<IInvitationBL, InvitationBL>();
 
         }
     }
