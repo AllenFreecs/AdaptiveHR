@@ -105,6 +105,26 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("confirm")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> ConfirmAccount(string guid)
+        {
+            try
+            {
+                var user = await _userBL.ConfirmRegistration(guid);
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+
+        }
         [HttpGet]
         [Route("heartbeat")]
         public IActionResult HeartBeat()

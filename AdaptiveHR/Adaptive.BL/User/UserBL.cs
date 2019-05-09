@@ -73,11 +73,51 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         }
 
-        public Task<GlobalResponseDTO> ConfirmRegistration(string guid)
+        public async Task<GlobalResponseDTO> ConfirmRegistration(string guid)
         {
             try
             {
-                throw new NotImplementedException();
+                //Check guid authenticity
+                string decguid = RIJEncrypt.Decrypt(guid, appSettings.Salt);
+                int id = Convert.ToInt32(decguid.Substring(0, decguid.IndexOf('-')));
+                DateTime resetDate = Convert.ToDateTime(decguid.Substring(decguid.LastIndexOf('-') + 1));
+
+                if ((DateTime.UtcNow - resetDate).TotalMinutes > appSettings.ResetTimeout)
+                {
+                    return new GlobalResponseDTO() { IsSuccess = false, Message = "Request is expired" };
+                }
+                else {
+
+                  
+                    using (var transaction = _dbcontext.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var data = await _dbcontext.Users.Where(c => c.Id == id).SingleOrDefaultAsync();
+                            data.IsConfirmed = true;
+
+                            _dbcontext.Entry(data).State = EntityState.Modified;
+                            await _dbcontext.SaveChangesAsync();
+                            transaction.Commit();
+
+                            return new GlobalResponseDTO() { IsSuccess = true, Message = "Email Confirmed" };
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                            throw;
+                        }
+
+
+                    }
+
+
+
+                    
+                }
+               
+
             }
             catch (Exception ex)
             {
