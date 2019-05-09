@@ -171,8 +171,8 @@ namespace AdaptiveHR.Adaptive.BL.User
 
 
                         htmlTemplate = File.ReadAllText(htmlTemplate);
-                        htmlTemplate = htmlTemplate.Replace("{link}", url);
-
+                        htmlTemplate = htmlTemplate.Replace("{link}", url).Replace("{UserName}",data.Username);
+     
                         EmailModel email = new EmailModel();
                         email.From = appSettings.Email;
                         email.Recipients = data.Email;
