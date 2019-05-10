@@ -52,6 +52,7 @@ namespace AdaptiveHR.Controllers
         {
             try
             {
+            
                 var data = await _pdsbl.GetPDSData(ID);
 
                 if (data == null)
@@ -112,7 +113,10 @@ namespace AdaptiveHR.Controllers
         {
             try
             {
-
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 if (model.SessionID != null && _pdsbl.ValidateSessionID(model.SessionID))
                 {
                     model.Id = 0;
