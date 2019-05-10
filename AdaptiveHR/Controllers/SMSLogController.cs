@@ -86,7 +86,7 @@ namespace AdaptiveHR.Controllers
 
         [HttpPost]
         [Route("save")]
-        [ProducesResponseType(typeof(SMSLogDTO), 200)]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
         public async Task<IActionResult> SaveSMSLogData(SMSLogDTO model)
         {
             try

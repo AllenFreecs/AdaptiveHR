@@ -86,7 +86,7 @@ namespace AdaptiveHR.Controllers
 
         [HttpPost]
         [Route("save")]
-        [ProducesResponseType(typeof(EmployeeUpdatesDTO), 200)]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
         public async Task<IActionResult> SaveEmployeeUpdatesData(EmployeeUpdatesDTO model)
         {
             try

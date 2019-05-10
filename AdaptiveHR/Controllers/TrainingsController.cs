@@ -86,7 +86,7 @@ namespace AdaptiveHR.Controllers
 
         [HttpPost]
         [Route("save")]
-        [ProducesResponseType(typeof(TrainingsDTO), 200)]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
         public async Task<IActionResult> SaveTrainingsData(TrainingsDTO model)
         {
             try
