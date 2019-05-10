@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace AdaptiveHR.Model
 {
@@ -46,14 +44,12 @@ namespace AdaptiveHR.Model
         [StringLength(50)]
         public string CivilStatus { get; set; }
 
-        [Required(ErrorMessage = "Email address is required")]
         [EmailAddress(ErrorMessage = "Invalid EmailAddress")]
         public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "MobileNumber is required")]
-        [MaxLength(11)]
-        [MinLength(11)]
-        public int? MobileNumber { get; set; }
+        [StringLength(11, MinimumLength = 11 , ErrorMessage = "This field must be 11 characters")]
+        public string MobileNumber { get; set; }
         public int? SSS { get; set; }
         public int? PHIC { get; set; }
         public int? TIN { get; set; }

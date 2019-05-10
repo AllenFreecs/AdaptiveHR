@@ -59,6 +59,7 @@ namespace AdaptiveHR.Util.AutoMapper
         private void PDSDTOMap()
         {
             CreateMap<Pds, PDSDTO>().IgnoreAllNonExisting();
+            CreateMap<PDSDTO, Pds>().IgnoreAllNonExisting();
         }
         private void EmployeeDTOMap()
         {

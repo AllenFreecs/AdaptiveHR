@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.PDS;
 using AdaptiveHR.Model;
+using AdaptiveHR.SwaggerSamples;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Swashbuckle.AspNetCore.Examples;
 
 namespace AdaptiveHR.Controllers
 {
@@ -89,7 +91,7 @@ namespace AdaptiveHR.Controllers
 
         [HttpPost]
         [Route("save")]
-        [ProducesResponseType(typeof(PDSDTO), 200)]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
         public async Task<IActionResult> SavePDSData(PDSDTO model)
         {
             try
@@ -105,9 +107,14 @@ namespace AdaptiveHR.Controllers
             }
         }
 
+        /// <summary>
+        /// Save PDS from guest page.
+        /// </summary>
+
         [AllowAnonymous]
         [HttpPost]
         [Route("saveguestdata")]
+        [SwaggerRequestExample(typeof(PDSDTO), typeof(PDSExample))]
         [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
         public async Task<IActionResult> SavePDSGuestData(PDSDTO model)
         {
@@ -136,6 +143,9 @@ namespace AdaptiveHR.Controllers
             }
         }
 
+        /// <summary>
+        /// Generate expirable sessionid for guest page.
+        /// </summary>
         [AllowAnonymous]
         [HttpGet]
         [Route("sessionid")]

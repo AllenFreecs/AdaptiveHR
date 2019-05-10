@@ -722,6 +722,10 @@ namespace Adaptive.Models.Entities
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
+                entity.Property(e => e.MobileNumber)
+                    .HasMaxLength(11)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.Property(e => e.Phic).HasColumnName("PHIC");

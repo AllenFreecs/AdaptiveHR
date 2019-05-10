@@ -23,7 +23,7 @@ namespace Adaptive.Models.Entities
         public string CurrentAddress { get; set; }
         public string CivilStatus { get; set; }
         public string EmailAddress { get; set; }
-        public int? MobileNumber { get; set; }
+        public string MobileNumber { get; set; }
         public int? Sss { get; set; }
         public int? Phic { get; set; }
         public int? Tin { get; set; }
