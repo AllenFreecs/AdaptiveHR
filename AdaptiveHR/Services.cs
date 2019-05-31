@@ -3,6 +3,7 @@ using AdaptiveHR.Adaptive.BL.applicationschedule;
 using AdaptiveHR.Adaptive.BL.approvergroup;
 using AdaptiveHR.Adaptive.BL.approvergroupdetail;
 using AdaptiveHR.Adaptive.BL.attendance;
+using AdaptiveHR.Adaptive.BL.city;
 using AdaptiveHR.Adaptive.BL.docs;
 using AdaptiveHR.Adaptive.BL.education;
 using AdaptiveHR.Adaptive.BL.emaillog;
@@ -92,6 +93,8 @@ namespace AdaptiveHR
             services.AddScoped<IHumanResourceBL, HumanResourceBL>();
             services.AddScoped<IHumanResourceStatusBL, HumanResourceStatusBL>();
             services.AddScoped<IInvitationBL, InvitationBL>();
+            services.AddScoped<ICityBL, CityBL>();
+
 
         }
     }

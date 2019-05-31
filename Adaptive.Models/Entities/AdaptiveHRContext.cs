@@ -27,6 +27,7 @@ namespace Adaptive.Models.Entities
         public virtual DbSet<ApproverGroup> ApproverGroup { get; set; }
         public virtual DbSet<ApproverGroupDetail> ApproverGroupDetail { get; set; }
         public virtual DbSet<Attendance> Attendance { get; set; }
+        public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<Education> Education { get; set; }
         public virtual DbSet<EmailLog> EmailLog { get; set; }
@@ -155,6 +156,19 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.WorkDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<City>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<Docs>(entity =>

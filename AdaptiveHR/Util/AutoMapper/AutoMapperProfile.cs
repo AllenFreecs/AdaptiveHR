@@ -50,7 +50,7 @@ namespace AdaptiveHR.Util.AutoMapper
             HumanResourceDTOMap();
             HumanResourceStatusDTOMap();
             InvitationDTOMap();
-
+            CityDTOMap();
         }
         private void AuthDTOMap()
         {
@@ -207,6 +207,12 @@ namespace AdaptiveHR.Util.AutoMapper
         {
             CreateMap<Invitation, InvitationDTO>().IgnoreAllNonExisting();
         }
+
+        private void CityDTOMap()
+        {
+            CreateMap<City, CityDTO>().IgnoreAllNonExisting();
+        }
+
 
 
     }
