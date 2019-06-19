@@ -8,6 +8,9 @@ namespace AdaptiveHR.Adaptive.BL.city
 {
     public interface ICityBL
     {
-        Task<IEnumerable<CityDTO>> GetCityList();
+        Task<IEnumerable<CityDTO>> GetCityList(PageRequest paging);
+        Task<CityDTO> GetCityData(int ID);
+        Task<GlobalResponseDTO> SaveCity(CityDTO model);
+        Task<GlobalResponseDTO> DeleteCity(IEnumerable<int> IDs);
     }
 }

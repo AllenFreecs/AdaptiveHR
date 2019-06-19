@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdaptiveHR.Adaptive.BL.pds;
+using AdaptiveHR.Adaptive.BL.city;
 using AdaptiveHR.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,22 +12,22 @@ namespace AdaptiveHR.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PDSController : ControllerBase
+    public class CityController : ControllerBase
     {
-        private readonly IPDSBL _PDSbl;
-        public PDSController(IPDSBL PDSBL)
+        private readonly ICityBL _Citybl;
+        public CityController(ICityBL CityBL)
         {
-            _PDSbl = PDSBL;
+            _Citybl = CityBL;
         }
 
         [HttpPost]
         [Route("list")]
-        [ProducesResponseType(typeof(IEnumerable<PDSDTO>), 200)]
-        public async Task<IActionResult> GetPDSList(PageRequest paging)
+        [ProducesResponseType(typeof(IEnumerable<CityDTO>), 200)]
+        public async Task<IActionResult> GetCityList(PageRequest paging)
         {
             try
             {
-                var data = await _PDSbl.GetPDSList(paging);
+                var data = await _Citybl.GetCityList(paging);
 
                 if (data == null)
                 {
@@ -45,12 +45,12 @@ namespace AdaptiveHR.Controllers
 
         [HttpGet]
         [Route("data")]
-        [ProducesResponseType(typeof(PDSDTO), 200)]
-        public async Task<IActionResult> GetPDSData(int ID)
+        [ProducesResponseType(typeof(CityDTO), 200)]
+        public async Task<IActionResult> GetCityData(int ID)
         {
             try
             {
-                var data = await _PDSbl.GetPDSData(ID);
+                var data = await _Citybl.GetCityData(ID);
 
                 if (data == null)
                 {
@@ -69,11 +69,11 @@ namespace AdaptiveHR.Controllers
         [HttpPost]
         [Route("remove")]
         [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
-        public async Task<IActionResult> DeletePDSData(IEnumerable<int> IDs)
+        public async Task<IActionResult> DeleteCityData(IEnumerable<int> IDs)
         {
             try
             {
-                var data = await _PDSbl.DeletePDS(IDs);
+                var data = await _Citybl.DeleteCity(IDs);
 
                 return Ok(data);
             }
@@ -87,11 +87,11 @@ namespace AdaptiveHR.Controllers
         [HttpPost]
         [Route("save")]
         [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
-        public async Task<IActionResult> SavePDSData(PDSDTO model)
+        public async Task<IActionResult> SaveCityData(CityDTO model)
         {
             try
             {
-                var data = await _PDSbl.SavePDS(model);
+                var data = await _Citybl.SaveCity(model);
 
                 return Ok(data);
             }

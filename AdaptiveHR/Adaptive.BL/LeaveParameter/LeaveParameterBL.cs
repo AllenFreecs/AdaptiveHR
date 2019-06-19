@@ -40,7 +40,7 @@ namespace AdaptiveHR.Adaptive.BL.leaveparameter
                         catch
                         {
                             transaction.Rollback();
-                            return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                            return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                             throw;
                         }
                     }
@@ -118,7 +118,7 @@ namespace AdaptiveHR.Adaptive.BL.leaveparameter
                     catch
                     {
                         transaction.Rollback();
-                        return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                        return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                         throw;
                     }
                 }

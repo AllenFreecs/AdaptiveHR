@@ -40,7 +40,7 @@ namespace AdaptiveHR.Adaptive.BL.smsprofile
                         catch
                         {
                             transaction.Rollback();
-                            return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                            return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                             throw;
                         }
                     }
@@ -102,7 +102,7 @@ namespace AdaptiveHR.Adaptive.BL.smsprofile
                         if (model.Id != 0)
                         {
 
-                            var data = Mapper.Map<SMSProfileDTO,Smsprofile>(model);
+                            var data = Mapper.Map<SMSProfileDTO, Smsprofile>(model);
                             _dbcontext.Entry(data).State = EntityState.Modified;
 
                         }
@@ -118,7 +118,7 @@ namespace AdaptiveHR.Adaptive.BL.smsprofile
                     catch
                     {
                         transaction.Rollback();
-                        return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                        return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                         throw;
                     }
                 }

@@ -1,25 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adaptive.Models.Entities;
-using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Model;
-using AdaptiveHR.Util.Encryption;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
-namespace AdaptiveHR.Adaptive.BL.PDS
+namespace AdaptiveHR.Adaptive.BL.pds
 {
     public class PDSBL : IPDSBL
     {
         private AdaptiveHRContext _dbcontext;
-        private AppSettings appSettings;
-        public PDSBL(AdaptiveHRContext adaptiveHRContext, SettingsBL settingsBL)
+        public PDSBL(AdaptiveHRContext AdaptiveHRContext)
         {
-            _dbcontext = adaptiveHRContext;
-            appSettings = settingsBL.LoadSettings();
+            _dbcontext = AdaptiveHRContext;
         }
 
         public async Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs)
@@ -44,7 +40,7 @@ namespace AdaptiveHR.Adaptive.BL.PDS
                         catch
                         {
                             transaction.Rollback();
-                            return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                            return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                             throw;
                         }
                     }
@@ -62,35 +58,14 @@ namespace AdaptiveHR.Adaptive.BL.PDS
             }
         }
 
-        public async Task<string> GenerateSessionID()
-        {
-            try
-            {
-               
-                string SessionExpiy = DateTime.Now.AddMinutes(30).ToString();
-
-             
-
-                string sessionid = await Task.FromResult(RIJEncrypt.Encrypt(SessionExpiy, appSettings.Salt));
-
-                return sessionid;
-
-            }
-            catch (Exception ex)
-            {
-                LogManager.GetCurrentClassLogger().Error(ex);
-                throw new Exception("Server processes error", ex);
-            }
-        }
-
         public async Task<PDSDTO> GetPDSData(int ID)
         {
             try
             {
                 var data = await _dbcontext.Pds.Where(c => c.Id == ID && c.IsActive == true).SingleOrDefaultAsync();
-                var pdsdata = Mapper.Map<Pds, PDSDTO>(data);
+                var PDSdata = Mapper.Map<Pds, PDSDTO>(data);
 
-                return pdsdata;
+                return PDSdata;
             }
             catch (Exception ex)
             {
@@ -104,10 +79,10 @@ namespace AdaptiveHR.Adaptive.BL.PDS
             try
             {
                 var data = await _dbcontext.Pds.Where(c => c.IsActive == true).ToListAsync();
-                var pdsdata = Mapper.Map<IEnumerable<Pds>, IEnumerable<PDSDTO>>(data);
+                var PDSdata = Mapper.Map<IEnumerable<Pds>, IEnumerable<PDSDTO>>(data);
 
-                pdsdata = pdsdata.Skip((paging.Page - 1) * paging.Pagesize).Take(paging.Pagesize).ToList();
-                return pdsdata;
+                PDSdata = PDSdata.Skip((paging.Page - 1) * paging.Pagesize).Take(paging.Pagesize).ToList();
+                return PDSdata;
             }
             catch (Exception ex)
             {
@@ -143,37 +118,12 @@ namespace AdaptiveHR.Adaptive.BL.PDS
                     catch
                     {
                         transaction.Rollback();
-                        return new GlobalResponseDTO() { IsSuccess = false, Message = "Server processes error" };
+                        return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };
                         throw;
                     }
                 }
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Data has been saved." };
-            }
-            catch (Exception ex)
-            {
-                LogManager.GetCurrentClassLogger().Error(ex);
-                throw new Exception("Server processes error", ex);
-            }
-        }
-
-        public bool ValidateSessionID(string sessionid)
-        {
-            try
-            {
-                //Check guid authenticity
-                string decguid = RIJEncrypt.Decrypt(sessionid, appSettings.Salt);
-                DateTime sessionExpiry = Convert.ToDateTime(decguid);
-                if ((DateTime.Now - sessionExpiry).TotalMinutes > appSettings.ResetTimeout)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-
-
             }
             catch (Exception ex)
             {

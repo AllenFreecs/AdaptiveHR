@@ -26,7 +26,7 @@ using AdaptiveHR.Adaptive.BL.ot;
 using AdaptiveHR.Adaptive.BL.payrollitemtype;
 using AdaptiveHR.Adaptive.BL.payrollupload;
 using AdaptiveHR.Adaptive.BL.payslip;
-using AdaptiveHR.Adaptive.BL.PDS;
+using AdaptiveHR.Adaptive.BL.pds;
 using AdaptiveHR.Adaptive.BL.seminar;
 using AdaptiveHR.Adaptive.BL.Settings;
 using AdaptiveHR.Adaptive.BL.smslog;

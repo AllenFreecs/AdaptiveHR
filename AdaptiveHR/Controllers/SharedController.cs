@@ -20,28 +20,6 @@ namespace AdaptiveHR.Controllers
             _Citybl = CityBL;
         }
 
-        [HttpGet]
-        [Route("list")]
-        [ProducesResponseType(typeof(IEnumerable<CityDTO>), 200)]
-        public async Task<IActionResult> GetCityList()
-        {
-            try
-            {
-                var data = await _Citybl.GetCityList();
-
-                if (data == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-                LogManager.GetCurrentClassLogger().Error(ex);
-                return BadRequest(ex.Message);
-            }
-        }
-     
+      
     }
 }

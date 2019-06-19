@@ -15,9 +15,6 @@ namespace AdaptiveHR.SwaggerSamples
             {
                 Id = 0,
                 SessionID = "Test session",
-                Address = "Unit 206, The Hope Condominium Tower 2, Makati City",
-                AskingSalary = Convert.ToDecimal("132232"),
-                CurrentSalary = Convert.ToDecimal("10000"),
                 BirthDay = Convert.ToDateTime("08-30-93"),
                 CivilStatus = "Single",
                 ContactPreviousEmployer = true,
@@ -26,7 +23,7 @@ namespace AdaptiveHR.SwaggerSamples
                 LastName = "Benzon",
                 MobileNumber = "09481927707",
                 CurrentAddress = "8th Flr., Philppine Company Tower,1554 Mandaluyong City, Metro Manila",
-                EmailAddress = "testmailer@gmail.com",
+                Email = "testmailer@gmail.com",
                 HomeAddress = "Headquarters 1120 N Street Sacramento 916-654-526",
                 Gender =  "male",
                 ID_Job = 1,

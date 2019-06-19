@@ -1,10 +1,10 @@
-﻿using AdaptiveHR.Model;
+using AdaptiveHR.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AdaptiveHR.Adaptive.BL.PDS
+namespace AdaptiveHR.Adaptive.BL.pds
 {
     public interface IPDSBL
     {
@@ -12,8 +12,5 @@ namespace AdaptiveHR.Adaptive.BL.PDS
         Task<PDSDTO> GetPDSData(int ID);
         Task<GlobalResponseDTO> SavePDS(PDSDTO model);
         Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs);
-        Task<string> GenerateSessionID();
-        bool ValidateSessionID(string sessionid);
-
     }
 }

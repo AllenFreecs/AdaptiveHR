@@ -17,7 +17,7 @@ namespace Adaptive.Models.Entities
         }
 
         public AdaptiveHRContext(DbContextOptions<AdaptiveHRContext> options, IHttpContextAccessor httpContext)
-            : base(options)
+           : base(options)
         {
             _httpContext = httpContext;
         }
@@ -688,10 +688,6 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Address).IsUnicode(false);
-
-                entity.Property(e => e.AskingSalary).HasColumnType("decimal(18, 2)");
-
                 entity.Property(e => e.BirthDay).HasColumnType("datetime");
 
                 entity.Property(e => e.CivilStatus)
@@ -702,9 +698,7 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.CurrentAddress).IsUnicode(false);
 
-                entity.Property(e => e.CurrentSalary).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.EmailAddress)
+                entity.Property(e => e.Email)
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
@@ -726,6 +720,8 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdSeminar).HasColumnName("ID_Seminar");
 
+                entity.Property(e => e.Image).IsUnicode(false);
+
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LastName)
@@ -736,9 +732,7 @@ namespace Adaptive.Models.Entities
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.MobileNumber)
-                    .HasMaxLength(11)
-                    .IsUnicode(false);
+                entity.Property(e => e.MobileNumber).IsUnicode(false);
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
@@ -975,65 +969,6 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
-        }
-        public void AddAuditTimeStamp()
-        {
-            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
-
-            int? userid = _httpContext.HttpContext.User.Identity.Name != null ? Convert.ToInt32(((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Name).Value) : (int?)null;
-
-
-            foreach (var entity in entities)
-            {
-                if (entity.State == EntityState.Added)
-                {
-                    if (entity.Entity.GetType().GetProperty("CreatedDate") != null)
-                    {
-                        entity.Property("CreatedDate").CurrentValue = DateTime.UtcNow;
-                    }
-
-                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
-                    {
-                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
-                    }
-
-                    if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
-                    {
-                        entity.Property("CreatedBy").CurrentValue = userid == null ? entity.Property("CreatedBy").CurrentValue == null ? 1 : entity.Property("CreatedBy").CurrentValue : userid;
-                    }
-
-                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    {
-                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue == null ? 1 : entity.Property("UpdatedBy").CurrentValue : userid;
-                    }
-                }
-
-                if (entity.State == EntityState.Modified)
-                {
-                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
-                    {
-
-                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
-                    }
-
-                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
-                    {
-                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue : userid;
-                    }
-                }
-            }
-        }
-
-        public override int SaveChanges()
-        {
-            AddAuditTimeStamp();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            AddAuditTimeStamp();
-            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
