@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.pds;
 using AdaptiveHR.Model;
+using AdaptiveHR.SwaggerSamples;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Swashbuckle.AspNetCore.Examples;
 
 namespace AdaptiveHR.Controllers
 {
@@ -87,6 +89,7 @@ namespace AdaptiveHR.Controllers
         [HttpPost]
         [Route("save")]
         [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        [SwaggerRequestExample(typeof(PDSDTO),typeof(PDSExample))]
         public async Task<IActionResult> SavePDSData(PDSDTO model)
         {
             try

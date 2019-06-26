@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Adaptive.Models.Entities;
+using AdaptiveHR.Adaptive.BL.docs;
 using AdaptiveHR.Model;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -13,9 +16,11 @@ namespace AdaptiveHR.Adaptive.BL.pds
     public class PDSBL : IPDSBL
     {
         private AdaptiveHRContext _dbcontext;
-        public PDSBL(AdaptiveHRContext AdaptiveHRContext)
+        private IDocsBL _docsBL;
+        public PDSBL(AdaptiveHRContext AdaptiveHRContext, IDocsBL docsBL)
         {
             _dbcontext = AdaptiveHRContext;
+            _docsBL = docsBL;
         }
 
         public async Task<GlobalResponseDTO> DeletePDS(IEnumerable<int> IDs)
@@ -95,6 +100,7 @@ namespace AdaptiveHR.Adaptive.BL.pds
         {
             try
             {
+                int id = model.Id == 0 && model.Image != null ? await _docsBL.UploadDocsBase64(model.Image, "PDS Image") : 0 ;
                 using (var transaction = _dbcontext.Database.BeginTransaction())
                 {
                     try
@@ -109,13 +115,14 @@ namespace AdaptiveHR.Adaptive.BL.pds
                         else
                         {
                             var data = Mapper.Map<PDSDTO, Pds>(model);
+                            data.IdDocs = id;
                             _dbcontext.Entry(data).State = EntityState.Added;
                         }
                         _dbcontext.SaveChanges();
                         transaction.Commit();
 
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
                         return new GlobalResponseDTO() { IsSuccess = true, Message = "Server processes error" };

@@ -172,5 +172,40 @@ namespace AdaptiveHR.Adaptive.BL.docs
                 throw new Exception("Server processes error", ex);
             }
         }
+        public async Task<int> UploadDocsBase64(string Base64 , string Description)
+        {
+            try
+            {
+                string NewFileName = Guid.NewGuid().ToString();
+                var filepath = Path.Combine(Environment.CurrentDirectory, "Archive", NewFileName);
+                Docs doc = new Docs();
+                doc.Title = NewFileName;
+                doc.Description = Description;
+
+                await File.WriteAllBytesAsync(filepath, Convert.FromBase64String(Base64));
+
+                using (var transaction = _dbcontext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _dbcontext.Entry(doc).State = EntityState.Added;
+                        _dbcontext.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return 0;
+                        throw;
+                    }
+                }
+                return doc.Id;
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
     }
 }
