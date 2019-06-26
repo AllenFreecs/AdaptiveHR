@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Archive\" />
     <Folder Include="Enum\" />
     <Folder Include="Helper\" />
     <Folder Include="wwwroot\" />

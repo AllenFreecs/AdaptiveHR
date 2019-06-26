@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.docs;
@@ -92,6 +93,24 @@ namespace AdaptiveHR.Controllers
             try
             {
                 var data = await _Docsbl.SaveDocs(model);
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> UploadTest(IFormFile file , string Description)
+        {
+            try
+            {
+                var data = await _Docsbl.UploadDocs(file, Description);
 
                 return Ok(data);
             }

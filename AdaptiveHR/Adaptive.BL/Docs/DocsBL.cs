@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Adaptive.Models.Entities;
 using AdaptiveHR.Model;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -124,6 +126,45 @@ namespace AdaptiveHR.Adaptive.BL.docs
                 }
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Data has been saved." };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
+
+        public async Task<int> UploadDocs(IFormFile file, string Description)
+        {
+            try
+            {
+                string NewFileName = Guid.NewGuid().ToString();
+                var filepath = Path.Combine(Environment.CurrentDirectory, "Archive", NewFileName);
+                Docs doc = new Docs();
+                doc.Title = NewFileName;
+                doc.Description = Description;
+
+                using (var fileStream = new FileStream(filepath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                using (var transaction = _dbcontext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        _dbcontext.Entry(doc).State = EntityState.Added;
+                        _dbcontext.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return 0;
+                        throw;
+                    }
+                }
+                return doc.Id;
             }
             catch (Exception ex)
             {

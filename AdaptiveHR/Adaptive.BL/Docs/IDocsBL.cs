@@ -1,4 +1,5 @@
 using AdaptiveHR.Model;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace AdaptiveHR.Adaptive.BL.docs
         Task<DocsDTO> GetDocsData(int ID);
         Task<GlobalResponseDTO> SaveDocs(DocsDTO model);
         Task<GlobalResponseDTO> DeleteDocs(IEnumerable<int> IDs);
+        Task<int> UploadDocs(IFormFile file, string Description);
     }
 }

@@ -9,7 +9,7 @@ namespace AdaptiveHR.Model
     {
 	   public int Id { get; set; }
        public string SessionID { get; set; }
-public string Image { get; set; }
+public int? ID_Docs { get; set; }
 public string Name { get; set; }
 public string LastName { get; set; }
 public string FirstName { get; set; }

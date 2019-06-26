@@ -12,10 +12,7 @@ namespace Adaptive.Models.Entities
     public partial class AdaptiveHRContext : DbContext
     {
         private readonly IHttpContextAccessor _httpContext;
-        public AdaptiveHRContext()
-        {
-        }
-
+     
         public AdaptiveHRContext(DbContextOptions<AdaptiveHRContext> options, IHttpContextAccessor httpContext)
            : base(options)
         {
@@ -180,8 +177,6 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Path).IsUnicode(false);
 
                 entity.Property(e => e.Title).IsUnicode(false);
 
@@ -714,13 +709,13 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdAwards).HasColumnName("ID_Awards");
 
+                entity.Property(e => e.IdDocs).HasColumnName("ID_Docs");
+
                 entity.Property(e => e.IdEducation).HasColumnName("ID_Education");
 
                 entity.Property(e => e.IdJob).HasColumnName("ID_Job");
 
                 entity.Property(e => e.IdSeminar).HasColumnName("ID_Seminar");
-
-                entity.Property(e => e.Image).IsUnicode(false);
 
                 entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
 
@@ -970,5 +965,65 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });
         }
+        public void AddAuditTimeStamp()
+        {
+            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
+
+            int? userid = _httpContext.HttpContext.User.Identity.Name != null ? Convert.ToInt32(((ClaimsIdentity)_httpContext.HttpContext.User.Identity).FindFirst(ClaimTypes.Name).Value) : (int?)null;
+
+
+            foreach (var entity in entities)
+            {
+                if (entity.State == EntityState.Added)
+                {
+                    if (entity.Entity.GetType().GetProperty("CreatedDate") != null)
+                    {
+                        entity.Property("CreatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
+                    {
+                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("CreatedBy") != null)
+                    {
+                        entity.Property("CreatedBy").CurrentValue = userid == null ? entity.Property("CreatedBy").CurrentValue == null ? 1 : entity.Property("CreatedBy").CurrentValue : userid;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue == null ? 1 : entity.Property("UpdatedBy").CurrentValue : userid;
+                    }
+                }
+
+                if (entity.State == EntityState.Modified)
+                {
+                    if (entity.Entity.GetType().GetProperty("UpdatedDate") != null)
+                    {
+
+                        entity.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
+                    }
+
+                    if (entity.Entity.GetType().GetProperty("UpdatedBy") != null)
+                    {
+                        entity.Property("UpdatedBy").CurrentValue = userid == null ? entity.Property("UpdatedBy").CurrentValue : userid;
+                    }
+                }
+            }
+        }
+
+        public override int SaveChanges()
+        {
+            AddAuditTimeStamp();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AddAuditTimeStamp();
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
+
 }
