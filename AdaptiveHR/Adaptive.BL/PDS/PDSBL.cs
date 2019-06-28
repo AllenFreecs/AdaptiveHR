@@ -115,7 +115,7 @@ namespace AdaptiveHR.Adaptive.BL.pds
                         else
                         {
                             var data = Mapper.Map<PDSDTO, Pds>(model);
-                            data.IdDocs = id;
+                            data.IdDoc = id;
                             _dbcontext.Entry(data).State = EntityState.Added;
                         }
                         _dbcontext.SaveChanges();

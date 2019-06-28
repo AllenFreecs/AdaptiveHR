@@ -12,7 +12,7 @@ namespace Adaptive.Models.Entities
     public partial class AdaptiveHRContext : DbContext
     {
         private readonly IHttpContextAccessor _httpContext;
-     
+
         public AdaptiveHRContext(DbContextOptions<AdaptiveHRContext> options, IHttpContextAccessor httpContext)
            : base(options)
         {
@@ -683,6 +683,10 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.Address).IsUnicode(false);
+
+                entity.Property(e => e.AskingSalary).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.BirthDay).HasColumnType("datetime");
 
                 entity.Property(e => e.CivilStatus)
@@ -692,6 +696,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.CurrentAddress).IsUnicode(false);
+
+                entity.Property(e => e.CurrentSalary).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(30)
@@ -709,7 +715,7 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.IdAwards).HasColumnName("ID_Awards");
 
-                entity.Property(e => e.IdDocs).HasColumnName("ID_Docs");
+                entity.Property(e => e.IdDoc).HasColumnName("ID_Doc");
 
                 entity.Property(e => e.IdEducation).HasColumnName("ID_Education");
 
@@ -731,15 +737,24 @@ namespace Adaptive.Models.Entities
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
-                entity.Property(e => e.Phic).HasColumnName("PHIC");
+                entity.Property(e => e.Phic)
+                    .HasColumnName("PHIC")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SessionId)
                     .HasColumnName("SessionID")
                     .IsUnicode(false);
 
-                entity.Property(e => e.Sss).HasColumnName("SSS");
+                entity.Property(e => e.Sss)
+                    .HasColumnName("SSS")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Tin).HasColumnName("TIN");
+                entity.Property(e => e.Tin)
+                    .HasColumnName("TIN")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             });

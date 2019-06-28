@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -48,12 +49,18 @@ namespace AdaptiveHR
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-            });
+            //Camel Casing
+            //services.AddMvc().AddJsonOptions(options =>
+            //{
+            //    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            //});
 
-            services.Configure<ApiBehaviorOptions>(options =>
+            //Pascal casing
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+
+
+        services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
