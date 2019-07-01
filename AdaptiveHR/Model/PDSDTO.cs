@@ -33,6 +33,8 @@ namespace AdaptiveHR.Model
         public decimal? AskingSalary { get; set; }
         public bool ContactPreviousEmployer { get; set; }
         public string Image { get; set; }
-
+        public  List<JobDTO> WorkExperience { get; set; }
+        public List<EducationDTO>  Education { get; set; }
+        public List<SeminarDTO> Seminars { get; set; }
     }
 }

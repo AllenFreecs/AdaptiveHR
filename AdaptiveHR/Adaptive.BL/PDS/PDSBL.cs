@@ -101,25 +101,24 @@ namespace AdaptiveHR.Adaptive.BL.pds
             try
             {
                 int id = model.Id == 0 && model.Image != null ? await _docsBL.UploadDocsBase64(model.Image, "PDS Image") : 0 ;
+                var data = Mapper.Map<PDSDTO, Pds>(model);
                 using (var transaction = _dbcontext.Database.BeginTransaction())
                 {
                     try
                     {
+
                         if (model.Id != 0)
                         {
-
-                            var data = Mapper.Map<PDSDTO, Pds>(model);
                             _dbcontext.Entry(data).State = EntityState.Modified;
-
                         }
                         else
                         {
-                            var data = Mapper.Map<PDSDTO, Pds>(model);
-                            data.IdDoc = id;
+                             data.IdDoc = id;
                             _dbcontext.Entry(data).State = EntityState.Added;
                         }
                         _dbcontext.SaveChanges();
                         transaction.Commit();
+                        await SavePDSChild(model, data.Id);
 
                     }
                     catch (Exception ex)
@@ -131,6 +130,50 @@ namespace AdaptiveHR.Adaptive.BL.pds
                 }
 
                 return new GlobalResponseDTO() { IsSuccess = true, Message = "Data has been saved." };
+            }
+            catch (Exception ex)
+            {
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
+            }
+        }
+
+        public async Task<bool> SavePDSChild(PDSDTO model, int id)
+        {
+            try
+            {
+                using (var transaction = _dbcontext.Database.BeginTransaction())
+                {
+                    try
+                    {
+
+                        var Education = Mapper.Map<PDSDTO, Education>(model);
+                        var Experience = Mapper.Map<PDSDTO, Job>(model);
+                        var Seminar = Mapper.Map<PDSDTO, Seminar>(model);
+
+                        Education.IdPds = id;
+                        Experience.IdPds = id;
+                        Seminar.IdPds = id;
+
+                        _dbcontext.Entry(Education).State = EntityState.Added;
+                        _dbcontext.Entry(Experience).State = EntityState.Added;
+                        _dbcontext.Entry(Seminar).State = EntityState.Added;
+
+
+
+                        _dbcontext.SaveChanges();
+                        transaction.Commit();
+
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return false;
+                        throw;
+                    }
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
