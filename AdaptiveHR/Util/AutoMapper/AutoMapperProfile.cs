@@ -52,9 +52,6 @@ namespace AdaptiveHR.Util.AutoMapper
             InvitationDTOMap();
             CityDTOMap();
 
-
-            //Manual calls
-            PDSFormMap();
         }
         private void AuthDTOMap()
         {
@@ -76,14 +73,17 @@ namespace AdaptiveHR.Util.AutoMapper
         private void JobDTOMap()
         {
             CreateMap<Job, JobDTO>().IgnoreAllNonExisting();
+            CreateMap<JobDTO, Job>().IgnoreAllNonExisting();
         }
         private void EducationDTOMap()
         {
             CreateMap<Education, EducationDTO>().IgnoreAllNonExisting();
+            CreateMap<EducationDTO, Education>().IgnoreAllNonExisting();
         }
         private void SeminarDTOMap()
         {
             CreateMap<Seminar, SeminarDTO>().IgnoreAllNonExisting();
+            CreateMap<SeminarDTO, Seminar>().IgnoreAllNonExisting();
         }
         private void WorkScheduleDTOMap()
         {
@@ -217,18 +217,6 @@ namespace AdaptiveHR.Util.AutoMapper
             CreateMap<City, CityDTO>().IgnoreAllNonExisting();
         }
 
-        //Manual Mapping
-
-        private void PDSFormMap()
-        {
-            CreateMap<Education, PDSDTO>().IgnoreAllNonExisting();
-            CreateMap<PDSDTO, Education>().IgnoreAllNonExisting();
-            CreateMap<Seminar, PDSDTO>().IgnoreAllNonExisting();
-            CreateMap<PDSDTO,Seminar>().IgnoreAllNonExisting();
-            CreateMap<Job,PDSDTO>().IgnoreAllNonExisting();
-            CreateMap<PDSDTO, Job>().IgnoreAllNonExisting();
-        }
-
-
+        
     }
 }

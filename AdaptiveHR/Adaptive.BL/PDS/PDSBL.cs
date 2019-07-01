@@ -118,7 +118,11 @@ namespace AdaptiveHR.Adaptive.BL.pds
                         }
                         _dbcontext.SaveChanges();
                         transaction.Commit();
-                        await SavePDSChild(model, data.Id);
+                        bool isChildSave = await SavePDSChild(model, data.Id);
+                        if (!isChildSave)
+                        {
+                            throw new Exception();
+                        }
 
                     }
                     catch (Exception ex)
@@ -147,25 +151,31 @@ namespace AdaptiveHR.Adaptive.BL.pds
                     try
                     {
 
-                        var Education = Mapper.Map<PDSDTO, Education>(model);
-                        var Experience = Mapper.Map<PDSDTO, Job>(model);
-                        var Seminar = Mapper.Map<PDSDTO, Seminar>(model);
+                        foreach (var item in model.WorkExperience)
+                        {
+                            var Experience = Mapper.Map<JobDTO, Job>(item);
+                            Experience.IdPds = id;
+                            _dbcontext.Entry(Experience).State = EntityState.Added;
+                        }
 
-                        Education.IdPds = id;
-                        Experience.IdPds = id;
-                        Seminar.IdPds = id;
+                        foreach (var item in model.Education)
+                        {
+                            var Education = Mapper.Map<EducationDTO, Education>(item);
+                            Education.IdPds = id;
+                            _dbcontext.Entry(Education).State = EntityState.Added;
+                        }
 
-                        _dbcontext.Entry(Education).State = EntityState.Added;
-                        _dbcontext.Entry(Experience).State = EntityState.Added;
-                        _dbcontext.Entry(Seminar).State = EntityState.Added;
-
-
+                        foreach (var item in model.Seminars)
+                        {
+                            var Seminar = Mapper.Map<SeminarDTO, Seminar>(item);
+                            Seminar.IdPds = id;
+                            _dbcontext.Entry(Seminar).State = EntityState.Added;
+                        }
 
                         _dbcontext.SaveChanges();
                         transaction.Commit();
-
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         transaction.Rollback();
                         return false;
