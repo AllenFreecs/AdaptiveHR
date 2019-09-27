@@ -21,5 +21,6 @@ namespace Adaptive.Models.Entities
         public DateTime? PasswordExpirationDate { get; set; }
         public string Guid { get; set; }
         public string Token { get; set; }
+        public int? InvalidAttempts { get; set; }
     }
 }

@@ -620,6 +620,8 @@ namespace Adaptive.Models.Entities
                 entity.Property(e => e.Password).IsUnicode(false);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<PayrollItemType>(entity =>

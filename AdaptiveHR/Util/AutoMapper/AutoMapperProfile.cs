@@ -55,7 +55,9 @@ namespace AdaptiveHR.Util.AutoMapper
         }
         private void AuthDTOMap()
         {
-            CreateMap<UserCreationDTO,Users>().IgnoreAllNonExisting();
+            CreateMap<UserCreationDTO, Users>()
+                .AfterMap((src, dest) => dest.IdUserGroup = src.ID_UserGroup)
+                .IgnoreAllNonExisting();
         }
         private void PDSDTOMap()
         {

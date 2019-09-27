@@ -10,5 +10,6 @@ namespace AdaptiveHR.Model
         public string token { get; set; }
         public string email { get; set; }
         public string name { get; set; }
+        public GlobalResponseDTO response { get; set; }
     }
 }
