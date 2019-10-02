@@ -4,12 +4,12 @@ using AdaptiveHR.Model;
 using AdaptiveHR.Util.Communication;
 using AdaptiveHR.Util.Encryption;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -32,24 +32,24 @@ namespace AdaptiveHR.Adaptive.BL.User
             _mailSender = mailSender;
         }
 
-        public UserInfo Authenticate(string username, string password)
+        public async Task<GlobalResponseDTO> Authenticate(string username, string password, HttpResponse response)
         {
             try
             {
 
                 string Encpassword = RIJEncrypt.Encrypt(password, appSettings.Salt);
 
-                var user = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.Password == Encpassword && x.IsActive == true && x.IsConfirmed == true);
+                var user = await _dbcontext.Users.SingleOrDefaultAsync(x => x.Username == username && x.Password == Encpassword && x.IsActive == true && x.IsConfirmed == true);
                 // return null if user not found
                 if (user == null)
                 {  
-                    var currentuser = _dbcontext.Users.SingleOrDefault(x => x.Username == username && x.IsActive == true && x.IsConfirmed == true);
+                    var currentuser = await _dbcontext.Users.SingleOrDefaultAsync(x => x.Username == username && x.IsActive == true && x.IsConfirmed == true);
 
                     //Check attempts
                     int? numattempts = currentuser.InvalidAttempts;
                     if (numattempts == 3)
                     {
-                        return new UserInfo() { response = new GlobalResponseDTO { IsSuccess = false, Message = "Account is locked." } };
+                        return new GlobalResponseDTO { IsSuccess = false, Message = "Account is locked." };
                     }
                     else {
                         if (!string.IsNullOrEmpty(currentuser.Username))
@@ -70,15 +70,17 @@ namespace AdaptiveHR.Adaptive.BL.User
                                 }
                             }
                         }
-                        return new UserInfo() { response = new GlobalResponseDTO { IsSuccess = false, Message = "Authentication failed." } };
+
+                        return new GlobalResponseDTO { IsSuccess = false, Message = "Username or password is incorrect." };
                     }
 
 
                 }
 
                 // create token
-                var Token = ReIssuetoken(user.Id.ToString(), user.IdUserGroup.ToString());
+                var Token = ReIssuetoken(user.Id.ToString(), user.IdUserGroup.ToString(), response);
                 user.Token = Token;
+
                 using (var transaction = _dbcontext.Database.BeginTransaction())
                 {
                     try
@@ -95,9 +97,9 @@ namespace AdaptiveHR.Adaptive.BL.User
                     }
                 }
 
+               
 
-
-                return new UserInfo() { token = Token, email = user.Email, name = string.Concat(user.FirstName, " ", user.LastName), response = new GlobalResponseDTO { IsSuccess = true, Message = "Authenticated." } };
+                return new GlobalResponseDTO { IsSuccess = true, Message = "Authenticated." }; ;
             }
             catch (Exception ex)
             {
@@ -379,7 +381,7 @@ namespace AdaptiveHR.Adaptive.BL.User
 
         }
 
-        public string ReIssuetoken(string claimID, string RoleID)
+        public string ReIssuetoken(string claimID, string RoleID , HttpResponse response)
         {
             try
             {
@@ -391,7 +393,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                     new Claim(ClaimTypes.Name, claimID),
-                     new Claim(ClaimTypes.Role, RoleID)
+                     new Claim(ClaimTypes.Role, RoleID),
                     }),
                     Issuer = appSettings.Issuer,
                     Audience = appSettings.Audience,
@@ -400,6 +402,9 @@ namespace AdaptiveHR.Adaptive.BL.User
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var newtoken = tokenHandler.WriteToken(token);
+
+                // issue client token
+                response.Cookies.Append("Auth", newtoken, new CookieOptions { Path = "/", HttpOnly = true });
 
                 return newtoken;
             }

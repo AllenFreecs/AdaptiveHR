@@ -28,16 +28,13 @@ namespace AdaptiveHR.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("authenticate")]
-        [ProducesResponseType(typeof(UserInfo), 200)]
-        public IActionResult Authenticate(string UserName, string Password)
+        [ProducesResponseType(typeof(GlobalResponseDTO), 200)]
+        public async Task<IActionResult> Authenticate(string UserName, string Password)
         {
             try
             {
-                var user = _userBL.Authenticate(UserName, Password);
-
-                if (user == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
-
+                var user = await _userBL.Authenticate(UserName, Password,Response);
+                
                 return Ok(user);
             }
             catch (Exception ex)
@@ -47,6 +44,16 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+
+        [AllowAnonymous]
+        [HttpGet, Route("logout")]
+        [ProducesResponseType(typeof(string), 200)]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("Auth");
+            return Ok("LOGGED_OUT");
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("forgotpassword")]
@@ -139,14 +146,13 @@ namespace AdaptiveHR.Controllers
                     bool Forged = await _userBL.ForgeryDetected(accesToken, Convert.ToInt32(claimid));
                     if (!Forged)
                     {
-                        return Ok(_userBL.ReIssuetoken(claimid, roleid));
+                        _userBL.ReIssuetoken(claimid, roleid, Response);
+                        return Ok(new { message = "Authenticated" });
                     }
                     else
                     {
                         return BadRequest(new { message = "Invalid token" });
                     }
-
-
                 }
                 {
                     return NotFound();
@@ -183,5 +189,7 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+
+
     }
 }

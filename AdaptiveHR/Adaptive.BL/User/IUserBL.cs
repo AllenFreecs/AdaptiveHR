@@ -1,5 +1,6 @@
 ﻿using Adaptive.Models.Entities;
 using AdaptiveHR.Model;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace AdaptiveHR.Adaptive.BL.User
 {
     public interface IUserBL
     {
-        UserInfo Authenticate(string username, string password);
-        string ReIssuetoken(string claimID, string roleID);
+        Task<GlobalResponseDTO> Authenticate(string username, string password, HttpResponse response);
+        string ReIssuetoken(string claimID, string roleID , HttpResponse response);
         Task<bool> ForgeryDetected(string token , int userID);
         Task<GlobalResponseDTO> ForgotPassword(string Username);
         Task<GlobalResponseDTO> ForgotUser(string email);
