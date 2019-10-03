@@ -1,5 +1,6 @@
 ﻿using AdaptiveHR.Model;
 using Microsoft.Extensions.Configuration;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,14 +34,15 @@ namespace AdaptiveHR.Adaptive.BL.Settings
                 appSettings.Salt = _configuration["Salt"];
                 appSettings.ClientURL = _configuration["ClientURL"];
                 appSettings.ResetTimeout = Convert.ToInt32(_configuration["ResetTimeout"]);
-
+                appSettings.PasswordExpiration = Convert.ToInt32(_configuration["PasswordExpiration"]);
 
                 return appSettings;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                LogManager.GetCurrentClassLogger().Error(ex);
+                throw new Exception("Server processes error", ex);
             }
         }
 

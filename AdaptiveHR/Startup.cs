@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Adaptive.Models.Entities;
 using AdaptiveHR.Model;
 using AdaptiveHR.Util.AutoMapper;
 using AutoMapper;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
@@ -113,12 +109,17 @@ namespace AdaptiveHR
                 };
             });
 
-
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "XSRF-TOKEN";
+                options.FormFieldName = "X-XSRF-TOKEN";
+                options.Cookie.Name = "CXSRF";
+            });
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IAntiforgery antiforgery)
         {
             app.UseStaticFiles();
 
@@ -153,6 +154,7 @@ namespace AdaptiveHR
 
             app.UseAuthentication();
             app.UseMvc();
+
 
         }
     }

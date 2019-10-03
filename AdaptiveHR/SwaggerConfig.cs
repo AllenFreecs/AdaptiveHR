@@ -47,6 +47,7 @@ namespace AdaptiveHR
                 //c.OperationFilter<AddHeaderOperationFilter>("correlationId", "Correlation Id for the request"); // adds any string you like to the request headers - in this case, a correlation id
                 c.OperationFilter<AddResponseHeadersFilter>(); // [SwaggerResponseHeader]
                 c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>(); // Adds "(Auth)" to the summary so that you can see which endpoints have Authorization
+                c.OperationFilter<CsrfConfig>();
             });
         }
     }

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AdaptiveHR.Adaptive.BL.User;
 using AdaptiveHR.Model;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,11 @@ namespace AdaptiveHR.Controllers
     public class AuthController : ControllerBase
     {
         private IUserBL _userBL;
-
-        public AuthController(IUserBL userBL)
+        private IAntiforgery _antiForgery;
+        public AuthController(IUserBL userBL, IAntiforgery antiForgery)
         {
             _userBL = userBL;
+            _antiForgery = antiForgery;
         }
 
         [AllowAnonymous]
@@ -33,8 +35,17 @@ namespace AdaptiveHR.Controllers
         {
             try
             {
-                var user = await _userBL.Authenticate(UserName, Password,Response);
-                
+                var user = await _userBL.Authenticate(UserName, Password, Response);
+
+                if (user.IsSuccess)
+                {
+                    var tokens = _antiForgery.GetAndStoreTokens(HttpContext);
+                    Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions
+                    {
+                        HttpOnly = true
+                    });
+                }
+
                 return Ok(user);
             }
             catch (Exception ex)
@@ -51,8 +62,11 @@ namespace AdaptiveHR.Controllers
         public IActionResult Logout()
         {
             Response.Cookies.Delete("Auth");
+            Response.Cookies.Delete("XSRF-TOKEN");
+            Response.Cookies.Delete("CXSRF");
             return Ok("LOGGED_OUT");
         }
+
 
         [AllowAnonymous]
         [HttpPost]
@@ -73,6 +87,8 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+
+
         [AllowAnonymous]
         [HttpPost]
         [Route("forgotusername")]
@@ -132,6 +148,7 @@ namespace AdaptiveHR.Controllers
             }
 
         }
+
         [HttpGet]
         [Route("heartbeat")]
         public async Task<IActionResult> HeartBeat()
@@ -171,6 +188,7 @@ namespace AdaptiveHR.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = UserRole.Admin)]
         [Route("CreateUser")]
         [ProducesResponseType(typeof(GlobalResponseDTO), 200)]

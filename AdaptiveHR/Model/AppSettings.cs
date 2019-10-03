@@ -19,6 +19,7 @@ namespace AdaptiveHR.Model
         public string Salt { get; set; }
         public string ClientURL { get; set; }
         public int ResetTimeout { get; set; }
+        public int PasswordExpiration { get; set; }
 
     }
 }

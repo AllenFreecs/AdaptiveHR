@@ -4,6 +4,7 @@ using AdaptiveHR.Model;
 using AdaptiveHR.Util.Communication;
 using AdaptiveHR.Util.Encryption;
 using AutoMapper;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,7 @@ namespace AdaptiveHR.Adaptive.BL.User
         private AdaptiveHRContext _dbcontext;
         private MailSender _mailSender;
         private AppSettings appSettings;
+
         public UserBL(AdaptiveHRContext adaptiveHRContext, IConfiguration configuration, SettingsBL settingsBL, MailSender mailSender)
         {
             _dbcontext = adaptiveHRContext;
@@ -97,8 +99,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                     }
                 }
 
-               
-
+              
                 return new GlobalResponseDTO { IsSuccess = true, Message = "Authenticated." }; ;
             }
             catch (Exception ex)
@@ -195,6 +196,7 @@ namespace AdaptiveHR.Adaptive.BL.User
                         //User
                         var data = Mapper.Map<UserCreationDTO, Users>(userCreationDTO);
                         data.Password = password;
+                        data.PasswordExpirationDate = DateTime.Now.AddDays(appSettings.PasswordExpiration);
 
                         _dbcontext.Entry(data).State = EntityState.Added;
                         await _dbcontext.SaveChangesAsync();
